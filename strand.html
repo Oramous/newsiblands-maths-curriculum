@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Strand</title>
+
+data.jsscript>
+
+<style>
+
+body{
+font-family:Arial;
+padding:40px;
+background:#f5f7fa;
+}
+
+.level{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:10px;
+}
+
+details{
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="title"></h1>
+
+<div id="content"></div>
+
+<script>
+
+const params =
+new URLSearchParams(window.location.search);
+
+const strand =
+params.get('strand');
+
+document.getElementById('title').innerText =
+strand;
+
+const filtered =
+curriculum.filter(
+item => item.strand === strand
+);
+
+let html = '';
+
+for(let level=4; level<=7; level++){
+
+let targets =
+filtered.filter(
+t => t.level === level
+);
+
+if(targets.length > 0){
+
+html += `
+<div class="level">
+
+<h2>Level ${level}</h2>
+`;
+
+targets.forEach(t=>{
+
+html += `
+
+<details>
+
+<summary>${t.target}</summary>
+
+<h3>Emerging</h3>
+
+<ul>
+${t.emerging.map(x=>`<li>${x}</li>`).join('')}
+</ul>
+
+<h3>Developing</h3>
+
+<ul>
+${t.developing.map(x=>`<li>${x}</li>`).join('')}
+</ul>
+
+<h3>Secure</h3>
+
+<ul>
+${t.secure.map(x=>`<li>${x}</li>`).join('')}
+</ul>
+
+<h3>Activities</h3>
+
+<ul>
+${t.activities.map(x=>`<li>${x}</li>`).join('')}
+</ul>
+
+</details>
+
+`;
+
+});
+
+html += '</div>';
+
+}
+
+}
+
+document.getElementById('content').innerHTML =
+html;
+
+</script>
+
+</body>
+
+</html>

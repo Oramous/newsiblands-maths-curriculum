@@ -208,15 +208,9 @@ filtered.filter(item =>
 Number(item.Level) === level
 );
 
-if(levelTargets.length === 0)
-return;
-
-let levelTargets =
-filtered.filter(item =>
-Number(item.Level) === level
-);
-
-if(levelTargets.length === 0) continue;
+if(levelTargets.length === 0){
+    return;
+}
 
 html += `
 <div class="level" id="level${level}">

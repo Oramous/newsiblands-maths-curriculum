@@ -105,6 +105,41 @@ background:var(--blue);
 background:var(--purple);
 }
 
+.jump{
+
+display:inline-block;
+margin-right:10px;
+padding:10px 15px;
+background:#003B5C;
+color:white;
+text-decoration:none;
+border-radius:10px;
+margin-bottom:20px;
+
+}
+
+.white-rose-btn{
+
+display:inline-block;
+padding:12px 18px;
+background:#0077B6;
+color:white;
+text-decoration:none;
+border-radius:10px;
+margin-top:10px;
+
+}
+
+.search-box{
+
+width:100%;
+padding:12px;
+margin-bottom:20px;
+border-radius:10px;
+border:2px solid #ddd;
+
+}
+
 </style>
 
 </head>
@@ -116,7 +151,15 @@ background:var(--purple);
 </a>
 
 <h1 id="strandTitle"></h1>
+<div id="levelNav"></div>
 
+<input
+type="text"
+id="targetSearch"
+placeholder="Search this strand..."
+class="search-box"
+onkeyup="searchTargets()">
+  
 <div id="curriculum"></div>
 
 <script>
@@ -159,7 +202,7 @@ Number(item.Level) === level
 if(levelTargets.length === 0) continue;
 
 html += `
-<div class="level">
+<div class="level" id="level${level}">
 
 <div class="level-title">
 Level ${level}
@@ -168,8 +211,15 @@ Level ${level}
 
 levelTargets.forEach(item=>{
 
-let pathwayClass =
-item.Pathway.toLowerCase();
+let pathwayClass = 'achievement';
+
+if(item.Pathway.toLowerCase().includes('belong')){
+    pathwayClass = 'belonging';
+}
+
+if(item.Pathway.toLowerCase().includes('celebr')){
+    pathwayClass = 'celebration';
+}
 
 html += `
 
@@ -213,13 +263,28 @@ Secure
 Suggested Activities
 </h3>
 
-<p>${item.Activities}</p>
+<ul>
+${
+(item.Activities || "")
+.split("|")
+.map(x => `<li>${x.trim()}</li>`)
+.join("")
+}
+</ul>
+
 
 <h3 class="section-title">
 Vocabulary
 </h3>
 
-<p>${item.Vocab}</p>
+${
+(item.Vocab || "")
+.split("|")
+.map(word =>
+`<span class="tag">${word.trim()}</span>`
+)
+.join("")
+}
 
 <h3 class="section-title">
 Resources
@@ -232,8 +297,13 @@ White Rose
 </h3>
 
 <p>
-<a href="${item['White Rose']}" target="_blank">
-Open White Rose Resource
+<a
+href="${item['White Rose']}"
+target="_blank"
+class="white-rose-btn">
+
+📖 White Rose Resource
+
 </a>
 </p>
 
@@ -280,12 +350,44 @@ html += '</div>';
 
 }
 
+document.getElementById('levelNav').innerHTML = `
+
+<a href="#level4" class="jump">Level 4</a>
+<a href="#level5" class="jump">Level 5</a>
+<a href="#level6" class="jump">Level 6</a>
+<a href="#level7" class="jump">Level 7</a>
+
+`;
 container.innerHTML = html;
 
 }
 
 buildPage();
 
+function searchTargets(){
+
+let search =
+document.getElementById('targetSearch')
+.value
+.toLowerCase();
+
+document
+.querySelectorAll('details')
+.forEach(item=>{
+
+if(
+item.innerText
+.toLowerCase()
+.includes(search)
+){
+
+item.style.display='';
+
+}
+else{
+
+item.style.display='none';
+  
 </script>
 
 </body>

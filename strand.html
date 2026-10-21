@@ -1,29 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-<title>Strand</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-data.jsscript>
+<title>Curriculum Strand</title>
+
+<script src="data.js"></script>
 
 <style>
 
+:root{
+--navy:#003B5C;
+--blue:#0077B6;
+--green:#5CB85C;
+--purple:#7B5CB8;
+--light:#F5F7FA;
+}
+
 body{
-font-family:Arial;
-padding:40px;
-background:#f5f7fa;
+font-family:Segoe UI, sans-serif;
+background:var(--light);
+padding:30px;
+}
+
+h1{
+color:var(--navy);
+}
+
+.back{
+display:inline-block;
+padding:10px 15px;
+background:var(--navy);
+color:white;
+text-decoration:none;
+border-radius:8px;
+margin-bottom:20px;
 }
 
 .level{
-background:white;
-padding:20px;
-margin-bottom:20px;
+margin-bottom:30px;
+}
+
+.level-title{
+background:var(--navy);
+color:white;
+padding:15px;
 border-radius:10px;
+font-size:22px;
+margin-bottom:10px;
 }
 
 details{
-margin-top:10px;
+background:white;
+border-radius:10px;
+margin-bottom:15px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+summary{
+padding:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.content{
+padding:20px;
+}
+
+.section-title{
+margin-top:15px;
+color:var(--navy);
+}
+
+.tag{
+display:inline-block;
+padding:6px 12px;
+background:#e6f2fb;
+margin:3px;
+border-radius:20px;
+}
+
+.pathway{
+display:inline-block;
+padding:6px 14px;
+border-radius:20px;
+color:white;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.belonging{
+background:var(--green);
+}
+
+.achievement{
+background:var(--blue);
+}
+
+.celebration{
+background:var(--purple);
 }
 
 </style>
@@ -32,11 +110,17 @@ margin-top:10px;
 
 <body>
 
-<h1 id="title"></h1>
+<a href="index.html" class="back">
+← Back to Homepage
+</a>
 
-<div id="content"></div>
+<h1 id="strandTitle"></h1>
+
+<div id="curriculum"></div>
 
 <script>
+
+async function buildPage(){
 
 const params =
 new URLSearchParams(window.location.search);
@@ -44,62 +128,142 @@ new URLSearchParams(window.location.search);
 const strand =
 params.get('strand');
 
-document.getElementById('title').innerText =
-strand;
+document.getElementById('strandTitle').innerText =
+strand + ' Strand';
+
+const data =
+await loadCurriculum();
 
 const filtered =
-curriculum.filter(
-item => item.strand === strand
+data.filter(item =>
+item.Strand === strand
 );
+
+const container =
+document.getElementById('curriculum');
 
 let html = '';
 
 for(let level=4; level<=7; level++){
 
-let targets =
-filtered.filter(
-t => t.level === level
+let levelTargets =
+filtered.filter(item =>
+Number(item.Level) === level
 );
 
-if(targets.length > 0){
+if(levelTargets.length === 0) continue;
 
 html += `
 <div class="level">
 
-<h2>Level ${level}</h2>
+<div class="level-title">
+Level ${level}
+</div>
 `;
 
-targets.forEach(t=>{
+levelTargets.forEach(item=>{
+
+let pathwayClass =
+item.Pathway.toLowerCase();
 
 html += `
 
 <details>
 
-<summary>${t.target}</summary>
+<summary>
+${item.Target}
+</summary>
 
-<h3>Emerging</h3>
+<div class="content">
 
-<ul>
-${t.emerging.map(x=>`<li>${x}</li>`).join('')}
-</ul>
+<div class="pathway ${pathwayClass}">
+${item.Pathway}
+</div>
 
-<h3>Developing</h3>
+<h3 class="section-title">
+Target Breakdown
+</h3>
 
-<ul>
-${t.developing.map(x=>`<li>${x}</li>`).join('')}
-</ul>
+<p>${item.Breakdown}</p>
 
-<h3>Secure</h3>
+<h3 class="section-title">
+Emerging
+</h3>
 
-<ul>
-${t.secure.map(x=>`<li>${x}</li>`).join('')}
-</ul>
+<p>${item.Emerging}</p>
 
-<h3>Activities</h3>
+<h3 class="section-title">
+Developing
+</h3>
 
-<ul>
-${t.activities.map(x=>`<li>${x}</li>`).join('')}
-</ul>
+<p>${item.Developing}</p>
+
+<h3 class="section-title">
+Secure
+</h3>
+
+<p>${item.Secure}</p>
+
+<h3 class="section-title">
+Suggested Activities
+</h3>
+
+<p>${item.Activities}</p>
+
+<h3 class="section-title">
+Vocabulary
+</h3>
+
+<p>${item.Vocab}</p>
+
+<h3 class="section-title">
+Resources
+</h3>
+
+<p>${item.Resources}</p>
+
+<h3 class="section-title">
+White Rose
+</h3>
+
+<p>
+<a href="${item['White Rose']}" target="_blank">
+Open White Rose Resource
+</a>
+</p>
+
+<h3 class="section-title">
+Common Misconceptions
+</h3>
+
+<p>${item.Misconceptions}</p>
+
+<h3 class="section-title">
+Curriculum Cycle
+</h3>
+
+<p>
+Cycle ${item.Cycle}
+Term ${item.Term}
+</p>
+
+<h3 class="section-title">
+Long Term EHCP Target
+</h3>
+
+<p>
+${item['Long term EHCP Target']}
+</p>
+
+<h3 class="section-title">
+Next Steps Within Level
+</h3>
+
+<p>
+${item['Next Steps within level']}
+</p>
+
+</div>
 
 </details>
 
@@ -111,10 +275,11 @@ html += '</div>';
 
 }
 
+container.innerHTML = html;
+
 }
 
-document.getElementById('content').innerHTML =
-html;
+buildPage();
 
 </script>
 

@@ -227,6 +227,29 @@ footer{
 
 }
 
+.cycle-item{
+
+padding:8px;
+margin-bottom:8px;
+background:#f7f7f7;
+border-radius:8px;
+
+}
+
+.cycle-item a{
+
+color:#003B5C;
+font-weight:bold;
+text-decoration:none;
+
+}
+
+.cycle-item a:hover{
+
+color:#0077B6;
+
+}
+    
 </style>
 
 <script>
@@ -508,13 +531,32 @@ Number(item.Cycle) === cycle &&
 Number(item.Term) === term
 );
 
+let seen = new Set();
+
+targets = targets.filter(item => {
+
+let key =
+item.Pathway +
+item.Subject +
+item.Strand;
+
+if(seen.has(key)){
+    return false;
+}
+
+seen.add(key);
+
+return true;
+
+});
+
 html += '<td>';
 
 targets.forEach(item=>{
 
 html += `
 
-<div style="margin-bottom:10px;">
+<div class="cycle-item">
 
 <strong>${item.Pathway}</strong><br>
 

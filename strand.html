@@ -192,7 +192,24 @@ document.getElementById('curriculum');
 
 let html = '';
 
-for(let level=4; level<=7; level++){
+const levels = [...new Set(
+
+filtered.map(item =>
+Number(item.Level))
+
+)]
+
+.sort((a,b)=>a-b);
+
+levels.forEach(level => {
+
+let levelTargets =
+filtered.filter(item =>
+Number(item.Level) === level
+);
+
+if(levelTargets.length === 0)
+return;
 
 let levelTargets =
 filtered.filter(item =>
@@ -348,7 +365,7 @@ ${item['Next Steps within level']}
 
 html += '</div>';
 
-}
+});
 
 document.getElementById('levelNav').innerHTML = `
 

@@ -249,6 +249,33 @@ text-decoration:none;
 color:#0077B6;
 
 }
+
+.cycle-pathway-heading{
+
+display:inline-block;
+padding:4px 10px;
+border-radius:20px;
+color:white;
+font-size:12px;
+font-weight:bold;
+margin-bottom:8px;
+
+}
+
+.belonging-text{
+background:#5CB85C;
+color:white;
+}
+
+.achievement-text{
+background:#0077B6;
+color:white;
+}
+
+.celebration-text{
+background:#7B5CB8;
+color:white;
+}   
     
 </style>
 
@@ -552,27 +579,98 @@ return true;
 
 html += '<td>';
 
-targets.forEach(item=>{
+let achievement =
+targets.filter(x =>
+x.Pathway.toLowerCase().includes('achievement')
+);
+
+let celebration =
+targets.filter(x =>
+x.Pathway.toLowerCase().includes('celebration')
+);
+
+let belonging =
+targets.filter(x =>
+x.Pathway.toLowerCase().includes('belonging')
+);
+
+if(belonging.length > 0){
 
 html += `
+<div class="cycle-pathway-heading belonging-text">
+Belonging
+</div>
+`;
 
+belonging.forEach(item=>{
+
+html += `
 <div class="cycle-item">
-
-<strong>${item.Pathway}</strong><br>
 
 ${item.Subject} -
 
 <a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
-
 ${item.Strand}
-
 </a>
 
 </div>
-
 `;
 
 });
+
+}
+
+if(achievement.length > 0){
+
+html += `
+<div class="cycle-pathway-heading achievement-text">
+Achievement
+</div>
+`;
+
+achievement.forEach(item=>{
+
+html += `
+<div class="cycle-item">
+
+${item.Subject} -
+
+<a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
+${item.Strand}
+</a>
+
+</div>
+`;
+
+});
+
+}
+
+if(celebration.length > 0){
+
+html += `
+<div class="cycle-pathway-heading celebration-text">
+Celebration
+</div>
+`;
+
+celebration.forEach(item=>{
+
+html += `
+<div class="cycle-item">
+
+${item.Subject} -
+
+<a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
+${item.Strand}
+</a>
+
+</div>
+`;
+
+});
+
+}
 
 html += '</td>';
 

@@ -1,101 +1,38 @@
-const curriculum = [
+const SHEET_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vR9CBBghY1D02UeyAvxSoskHBLFQyuBDD7Z39c0KOyZPfbcCAKvsEsTxTnCEUporwPAuC9mh4q-BIW8/pub?output=csv";
 
-{
-    id:1,
+async function loadCurriculum() {
 
-    strand:"Comparison",
+    const response = await fetch(SHEET_URL);
 
-    level:4,
+    const text = await response.text();
 
-    pathway:"Achievement",
-
-    target:"I can compare two groups up to 5",
-
-    emerging:[
-        "Identifies larger group with support"
-    ],
-
-    developing:[
-        "Compares independently"
-    ],
-
-    secure:[
-        "Explains which group has more"
-    ],
-
-    activities:[
-        "Snack comparison",
-        "Tower building"
-    ],
-
-    vocabulary:[
-        "more",
-        "fewer",
-        "same",
-        "equal"
-    ],
-
-    misconceptions:[
-        "Bigger objects always means more"
-    ],
-
-    cycle:1,
-
-    term:1,
-
-    ehcp:[
-        "Cognition & Learning"
-    ]
-
-},
-
-{
-    id:2,
-
-    strand:"Comparison",
-
-    level:5,
-
-    pathway:"Achievement",
-
-    target:"I can order groups by quantity",
-
-    emerging:[
-        "Orders groups with support"
-    ],
-
-    developing:[
-        "Orders groups independently"
-    ],
-
-    secure:[
-        "Explains ordering"
-    ],
-
-    activities:[
-        "Ordering towers",
-        "Lining up quantities"
-    ],
-
-    vocabulary:[
-        "more",
-        "less",
-        "greatest",
-        "smallest"
-    ],
-
-    misconceptions:[
-        "Uses size rather than quantity"
-    ],
-
-    cycle:1,
-
-    term:2,
-
-    ehcp:[
-        "Cognition & Learning"
-    ]
+    return parseCSV(text);
 
 }
 
-];
+function parseCSV(text){
+
+    const rows = text.trim().split("\n");
+
+    const headers =
+    rows[0].split(",");
+
+    return rows.slice(1).map(row=>{
+
+        const values = row.split(",");
+
+        let obj = {};
+
+        headers.forEach((h,i)=>{
+
+            obj[h.trim()] =
+            values[i]?.trim() || "";
+
+        });
+
+        return obj;
+
+    });
+
+}

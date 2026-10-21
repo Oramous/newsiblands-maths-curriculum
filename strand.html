@@ -8,7 +8,7 @@
 
 <title>Curriculum Strand</title>
 
-https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.jsscript>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="data.js"></script>
 
 <style>
@@ -135,9 +135,13 @@ strand + ' Strand';
 const data =
 await loadCurriculum();
 
+console.log(data);
+  
 const filtered =
 data.filter(item =>
-item.Strand === strand
+item.Strand &&
+item.Strand.toLowerCase() ===
+strand.toLowerCase()
 );
 
 const container =

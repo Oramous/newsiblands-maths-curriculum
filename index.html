@@ -256,6 +256,9 @@ item.style.display="none";
 
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="data.js"></script>
+    
 </head>
 
 <body>
@@ -402,39 +405,7 @@ Patterns &amp; Statistics
 
 <summary>Cycle 1</summary>
 
-<table class="cycle-table">
-
-<tr>
-<th>Term 1</th>
-<th>Term 2</th>
-<th>Term 3</th>
-<th>Term 4</th>
-<th>Term 5</th>
-<th>Term 6</th>
-</tr>
-
-<tr>
-
-<td>
-
-<a class="sub-link"
-href="view.html?cycle=1&term=1">
-
-View Term 1 Curriculum
-
-</a>
-
-</td>
-
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-
-</tr>
-
-</table>
+<div id="cycle1Container"></div>
 
 </details>
 
@@ -442,29 +413,7 @@ View Term 1 Curriculum
 
 <summary>Cycle 2</summary>
 
-<table class="cycle-table">
-
-<tr>
-<th>Term 1</th>
-<th>Term 2</th>
-<th>Term 3</th>
-<th>Term 4</th>
-<th>Term 5</th>
-<th>Term 6</th>
-</tr>
-
-<tr>
-
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-
-</tr>
-
-</table>
+<div id="cycle2Container"></div>
 
 </details>
 
@@ -472,29 +421,7 @@ View Term 1 Curriculum
 
 <summary>Cycle 3</summary>
 
-<table class="cycle-table">
-
-<tr>
-<th>Term 1</th>
-<th>Term 2</th>
-<th>Term 3</th>
-<th>Term 4</th>
-<th>Term 5</th>
-<th>Term 6</th>
-</tr>
-
-<tr>
-
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-<td>Populate Later</td>
-
-</tr>
-
-</table>
+<div id="cycle3Container"></div>
 
 </details>
 
@@ -542,6 +469,85 @@ New Siblands School Mathematics Curriculum
 
 </div>
 
+<script>
+
+async function buildCycles(){
+
+const data = await loadCurriculum();
+
+buildCycleTable(data,1);
+buildCycleTable(data,2);
+buildCycleTable(data,3);
+
+}
+
+function buildCycleTable(data,cycle){
+
+let html = `
+
+<table class="cycle-table">
+
+<tr>
+<th>Term 1</th>
+<th>Term 2</th>
+<th>Term 3</th>
+<th>Term 4</th>
+<th>Term 5</th>
+<th>Term 6</th>
+</tr>
+
+<tr>
+
+`;
+
+for(let term=1; term<=6; term++){
+
+let targets =
+data.filter(item =>
+Number(item.Cycle) === cycle &&
+Number(item.Term) === term
+);
+
+html += '<td>';
+
+targets.forEach(item=>{
+
+html += `
+
+<div style="margin-bottom:10px;">
+
+<strong>${item.Pathway}</strong><br>
+
+${item.Subject} -
+
+<a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
+
+${item.Strand}
+
+</a>
+
+</div>
+
+`;
+
+});
+
+html += '</td>';
+
+}
+
+html += '</tr></table>';
+
+document.getElementById(
+`cycle${cycle}Container`
+).innerHTML = html;
+
+}
+
+buildCycles();
+
+</script>
+    
 </body>
 
 </html>

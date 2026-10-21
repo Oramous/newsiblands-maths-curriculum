@@ -4,26 +4,11 @@ const SHEET_URL =
 async function loadCurriculum() {
 
     const response = await fetch(SHEET_URL);
-    const text = await response.text();
+    const csvText = await response.text();
 
-    const rows = text.trim().split('\n');
-
-    const headers = rows[0]
-        .split(',')
-        .map(h => h.trim());
-
-    return rows.slice(1).map(row => {
-
-        const values = row.split(',');
-
-        let obj = {};
-
-        headers.forEach((header, i) => {
-            obj[header] = values[i] || '';
-        });
-
-        return obj;
-
-    });
+    return Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true
+    }).data;
 
 }

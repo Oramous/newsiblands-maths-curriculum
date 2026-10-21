@@ -211,6 +211,79 @@ pathway.toLowerCase()
 
 }
 
+if(pathway){
+
+let strands = [...new Set(
+
+filtered.map(item =>
+item.Subject + "|" + item.Strand)
+
+)];
+
+let html = "";
+
+let numberStrands =
+strands.filter(x =>
+x.startsWith("Number|"));
+
+let ssmStrands =
+strands.filter(x =>
+x.startsWith("SSM|"));
+
+html += `
+<h2>Number</h2>
+`;
+
+numberStrands.forEach(item=>{
+
+let parts = item.split("|");
+
+html += `
+
+<div class="card">
+
+<a href="strand.html?strand=${encodeURIComponent(parts[1])}">
+
+${parts[1]}
+
+</a>
+
+</div>
+
+`;
+
+});
+
+html += `
+<h2>Shape, Space &amp; Measure</h2>
+`;
+
+ssmStrands.forEach(item=>{
+
+let parts = item.split("|");
+
+html += `
+
+<div class="card">
+
+<a href="strand.html?strand=${encodeURIComponent(parts[1])}">
+
+${parts[1]}
+
+</a>
+
+</div>
+
+`;
+
+});
+
+container.innerHTML = html;
+
+return;
+
+}
+  
 if(cycle){
 
 filtered = filtered.filter(item =>

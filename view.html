@@ -172,6 +172,12 @@ new URLSearchParams(window.location.search);
 const strand =
 params.get('strand');
 
+const cycle =
+params.get('cycle');
+
+const term =
+params.get('term');
+  
 const pathway =
 params.get('pathway');
 
@@ -205,6 +211,22 @@ pathway.toLowerCase()
 
 }
 
+if(cycle){
+
+filtered = filtered.filter(item =>
+item.Cycle == cycle
+);
+
+}
+
+if(term){
+
+filtered = filtered.filter(item =>
+item.Term == term
+);
+
+}
+  
 const container =
 document.getElementById('curriculum');
 

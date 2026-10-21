@@ -193,6 +193,13 @@ document.getElementById('strandTitle').innerText =
 pathway + ' Pathway';
 
 }
+
+if(pathway){
+
+document.getElementById('levelNav').style.display = 'none';
+
+}
+
 else if(cycle && term){
 
 document.getElementById('strandTitle').innerText =
@@ -224,8 +231,8 @@ if(pathway){
 
 filtered = filtered.filter(item =>
 item.Pathway &&
-item.Pathway.toLowerCase() ===
-pathway.toLowerCase()
+item.Pathway.toLowerCase()
+.includes(pathway.toLowerCase())
 );
 
 }
@@ -483,7 +490,7 @@ ${item['Next Steps within level']}
 
 html += '</div>';
 
-}
+});
 
 document.getElementById('levelNav').innerHTML =
 levels.map(level =>

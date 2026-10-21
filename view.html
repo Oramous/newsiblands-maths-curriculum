@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Curriculum Strand</title>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="data.js"></script>
+
+<style>
+
+:root{
+--navy:#003B5C;
+--blue:#0077B6;
+--green:#5CB85C;
+--purple:#7B5CB8;
+--light:#F5F7FA;
+}
+
+body{
+font-family:Segoe UI, sans-serif;
+background:var(--light);
+padding:30px;
+}
+
+h1{
+color:var(--navy);
+}
+
+.back{
+display:inline-block;
+padding:10px 15px;
+background:var(--navy);
+color:white;
+text-decoration:none;
+border-radius:8px;
+margin-bottom:20px;
+}
+
+.level{
+margin-bottom:30px;
+}
+
+.level-title{
+background:var(--navy);
+color:white;
+padding:15px;
+border-radius:10px;
+font-size:22px;
+margin-bottom:10px;
+}
+
+details{
+background:white;
+border-radius:10px;
+margin-bottom:15px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+summary{
+padding:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.content{
+padding:20px;
+}
+
+.section-title{
+margin-top:15px;
+color:var(--navy);
+}
+
+.tag{
+display:inline-block;
+padding:6px 12px;
+background:#e6f2fb;
+margin:3px;
+border-radius:20px;
+}
+
+.pathway{
+display:inline-block;
+padding:6px 14px;
+border-radius:20px;
+color:white;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.belonging{
+background:var(--green);
+}
+
+.achievement{
+background:var(--blue);
+}
+
+.celebration{
+background:var(--purple);
+}
+
+.jump{
+
+display:inline-block;
+margin-right:10px;
+padding:10px 15px;
+background:#003B5C;
+color:white;
+text-decoration:none;
+border-radius:10px;
+margin-bottom:20px;
+
+}
+
+.white-rose-btn{
+
+display:inline-block;
+padding:12px 18px;
+background:#0077B6;
+color:white;
+text-decoration:none;
+border-radius:10px;
+margin-top:10px;
+
+}
+
+.search-box{
+
+width:100%;
+padding:12px;
+margin-bottom:20px;
+border-radius:10px;
+border:2px solid #ddd;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a href="index.html" class="back">
+← Back to Homepage
+</a>
+
+<h1 id="strandTitle"></h1>
+<div id="levelNav"></div>
+
+<input
+type="text"
+id="targetSearch"
+placeholder="Search this strand..."
+class="search-box"
+onkeyup="searchTargets()">
+  
+<div id="curriculum"></div>
+
+<script>
+
+async function buildPage(){
+
+const params =
+new URLSearchParams(window.location.search);
+
+const strand =
+params.get('strand');
+
+const pathway =
+params.get('pathway');
+
+document.getElementById('strandTitle').innerText =
+strand + ' Strand';
+
+const data =
+await loadCurriculum();
+
+console.log(data);
+  
+let filtered = data;
+
+if(strand){
+
+filtered = filtered.filter(item =>
+item.Strand &&
+item.Strand.toLowerCase() ===
+strand.toLowerCase()
+);
+
+}
+
+if(pathway){
+
+filtered = filtered.filter(item =>
+item.Pathway &&
+item.Pathway.toLowerCase() ===
+pathway.toLowerCase()
+);
+
+}
+
+const container =
+document.getElementById('curriculum');
+
+let html = '';
+
+for(let level=4; level<=7; level++){
+
+let levelTargets =
+filtered.filter(item =>
+Number(item.Level) === level
+);
+
+if(levelTargets.length === 0) continue;
+
+html += `
+<div class="level" id="level${level}">
+
+<div class="level-title">
+Level ${level}
+</div>
+`;
+
+levelTargets.forEach(item=>{
+
+let pathwayClass = 'achievement';
+
+if(item.Pathway.toLowerCase().includes('belong')){
+    pathwayClass = 'belonging';
+}
+
+if(item.Pathway.toLowerCase().includes('celebr')){
+    pathwayClass = 'celebration';
+}
+
+html += `
+
+<details>
+
+<summary>
+${item.Target}
+</summary>
+
+<div class="content">
+
+<div class="pathway ${pathwayClass}">
+${item.Pathway}
+</div>
+
+<h3 class="section-title">
+Target Breakdown
+</h3>
+
+<p>${item.Breakdown}</p>
+
+<h3 class="section-title">
+Emerging
+</h3>
+
+<p>${item.Emerging}</p>
+
+<h3 class="section-title">
+Developing
+</h3>
+
+<p>${item.Developing}</p>
+
+<h3 class="section-title">
+Secure
+</h3>
+
+<p>${item.Secure}</p>
+
+<h3 class="section-title">
+Suggested Activities
+</h3>
+
+<ul>
+${
+(item.Activities || "")
+.split("|")
+.map(x => `<li>${x.trim()}</li>`)
+.join("")
+}
+</ul>
+
+
+<h3 class="section-title">
+Vocabulary
+</h3>
+
+${
+(item.Vocab || "")
+.split("|")
+.map(word =>
+`<span class="tag">${word.trim()}</span>`
+)
+.join("")
+}
+
+<h3 class="section-title">
+Resources
+</h3>
+
+<p>${item.Resources}</p>
+
+<h3 class="section-title">
+White Rose
+</h3>
+
+<p>
+<a
+href="${item['White Rose']}"
+target="_blank"
+class="white-rose-btn">
+
+📖 White Rose Resource
+
+</a>
+</p>
+
+<h3 class="section-title">
+Common Misconceptions
+</h3>
+
+<p>${item.Misconceptions}</p>
+
+<h3 class="section-title">
+Curriculum Cycle
+</h3>
+
+<p>
+Cycle ${item.Cycle}
+Term ${item.Term}
+</p>
+
+<h3 class="section-title">
+Long Term EHCP Target
+</h3>
+
+<p>
+${item['Long term EHCP Target']}
+</p>
+
+<h3 class="section-title">
+Next Steps Within Level
+</h3>
+
+<p>
+${item['Next Steps within level']}
+</p>
+
+</div>
+
+</details>
+
+`;
+
+});
+
+html += '</div>';
+
+}
+
+document.getElementById('levelNav').innerHTML = `
+
+<a href="#level4" class="jump">Level 4</a>
+<a href="#level5" class="jump">Level 5</a>
+<a href="#level6" class="jump">Level 6</a>
+<a href="#level7" class="jump">Level 7</a>
+
+`;
+container.innerHTML = html;
+
+}
+
+buildPage();
+
+function searchTargets(){
+
+let search =
+document.getElementById('targetSearch')
+.value
+.toLowerCase();
+
+document
+.querySelectorAll('details')
+.forEach(item=>{
+
+if(
+item.innerText
+.toLowerCase()
+.includes(search)
+){
+
+item.style.display='';
+
+}
+else{
+
+item.style.display='none';
+
+}
+
+});
+
+}
+  
+</script>
+
+</body>
+
+</html>

@@ -276,6 +276,53 @@ color:white;
 background:#7B5CB8;
 color:white;
 }   
+
+.cycle-button{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+min-height:100px;
+
+background:white;
+border-radius:15px;
+
+text-decoration:none;
+color:#003B5C;
+
+font-size:22px;
+font-weight:bold;
+
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+transition:.3s;
+
+cursor:pointer;
+
+}
+
+.cycle-button:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 6px 16px rgba(0,0,0,.12);
+
+}
+
+.cycle-button.active{
+
+background:#003B5C;
+color:white;
+
+font-size:26px;
+font-weight:900;
+
+box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+transform:scale(1.03);
+
+}
     
 </style>
 
@@ -566,15 +613,24 @@ Patterns &amp; Statistics
 
 <div class="grid">
 
-<a href="#" class="big-card" onclick="showCycle(1)">
+<a href="#"
+class="cycle-button"
+id="cycleBtn1"
+onclick="showCycle(1); return false;">
 Cycle 1
 </a>
 
-<a href="#" class="big-card" onclick="showCycle(2)">
+<a href="#"
+class="cycle-button"
+id="cycleBtn2"
+onclick="showCycle(2); return false;">
 Cycle 2
 </a>
 
-<a href="#" class="big-card" onclick="showCycle(3)">
+<a href="#"
+class="cycle-button"
+id="cycleBtn3"
+onclick="showCycle(3); return false;">
 Cycle 3
 </a>
 
@@ -649,6 +705,18 @@ showCycle(1);
 
 function showCycle(cycle){
 
+document
+.querySelectorAll('.cycle-button')
+.forEach(btn => {
+
+btn.classList.remove('active');
+
+});
+
+document
+.getElementById('cycleBtn' + cycle)
+.classList.add('active');
+    
 let html = `
 
 <table class="cycle-table">

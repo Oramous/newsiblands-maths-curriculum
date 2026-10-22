@@ -564,30 +564,33 @@ Patterns &amp; Statistics
 
 <h2>Browse by Curriculum Cycle</h2>
 
-<details>
+<div class="section searchable">
 
-<summary>Cycle 1</summary>
+<h2>Browse by Curriculum Cycle</h2>
 
-<div id="cycle1Container"></div>
+<div class="grid">
 
-</details>
+<a href="#" class="big-card" onclick="showCycle(1)">
+Cycle 1
+</a>
 
-<details>
+<a href="#" class="big-card" onclick="showCycle(2)">
+Cycle 2
+</a>
 
-<summary>Cycle 2</summary>
+<a href="#" class="big-card" onclick="showCycle(3)">
+Cycle 3
+</a>
 
-<div id="cycle2Container"></div>
+</div>
 
-</details>
+<br>
 
-<details>
+<div id="cycleContainer">
 
-<summary>Cycle 3</summary>
+</div>
 
-<div id="cycle3Container"></div>
-
-</details>
-
+</div>
 </div>
 
 <!-- EHCP -->
@@ -794,6 +797,130 @@ html += '</tr></table>';
 document.getElementById(
 `cycle${cycle}Container`
 ).innerHTML = html;
+
+}
+
+buildCycles();
+
+</script>
+
+<script>
+
+let curriculumData = [];
+
+async function buildCycles(){
+
+curriculumData = await loadCurriculum();
+
+showCycle(1);
+
+}
+
+function showCycle(cycle){
+
+let html = `
+
+<table class="cycle-table">
+
+<tr>
+<th>Term 1</th>
+<th>Term 2</th>
+<th>Term 3</th>
+<th>Term 4</th>
+<th>Term 5</th>
+<th>Term 6</th>
+</tr>
+
+<tr>
+
+`;
+
+for(let term=1; term<=6; term++){
+
+let targets =
+curriculumData.filter(item =>
+Number(item.Cycle) === cycle &&
+Number(item.Term) === term
+);
+
+let seen = new Set();
+
+targets = targets.filter(item => {
+
+let key =
+item.Pathway +
+item.Subject +
+item.Strand;
+
+if(seen.has(key)){
+return false;
+}
+
+seen.add(key);
+
+return true;
+
+});
+
+html += "<td>";
+
+let pathways = ["Belonging","Achievement","Celebration"];
+
+pathways.forEach(pathway => {
+
+let pathwayTargets =
+targets.filter(x =>
+x.Pathway &&
+x.Pathway.toLowerCase()
+.includes(pathway.toLowerCase())
+);
+
+if(pathwayTargets.length > 0){
+
+html += `
+<div class="cycle-pathway-heading">
+${pathway}
+</div>
+`;
+
+pathwayTargets.forEach(item => {
+
+html += `
+
+<div class="cycle-item">
+
+${item.Subject} -
+
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}&pathway=${encodeURIComponent(item.Pathway)}">
+
+${item.Strand}
+
+</a>
+
+</div>
+
+`;
+
+});
+
+}
+
+});
+
+html += "</td>";
+
+}
+
+html += `
+
+</tr>
+
+</table>
+
+`;
+
+document.getElementById("cycleContainer")
+.innerHTML = html;
 
 }
 

@@ -361,14 +361,15 @@ html += '</div>';
 
 });
 
-document.getElementById('levelNav').innerHTML = `
+document.getElementById('levelNav').innerHTML =
+levels.map(level =>
 
-<a href="#level4" class="jump">Level 4</a>
-<a href="#level5" class="jump">Level 5</a>
-<a href="#level6" class="jump">Level 6</a>
-<a href="#level7" class="jump">Level 7</a>
+`<a href="#level${level}" class="jump">
+Level ${level}
+</a>`
 
-`;
+).join('');
+
 container.innerHTML = html;
 
 }

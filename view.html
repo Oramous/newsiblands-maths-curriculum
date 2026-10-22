@@ -181,7 +181,13 @@ params.get('term');
 const pathway =
 params.get('pathway');
 
-if(strand){
+if(strand && pathway){
+
+document.getElementById('strandTitle').innerText =
+strand + ' (' + pathway + ')';
+
+}
+else if(strand){
 
 document.getElementById('strandTitle').innerText =
 strand + ' Strand';
@@ -237,9 +243,7 @@ item.Pathway.toLowerCase()
 
 }
 
-if(pathway){
-
-let strands = [...new Set(
+if(pathway && !strand){
 
 filtered.map(item =>
 item.Subject + "|" + item.Strand)

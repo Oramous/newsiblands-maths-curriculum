@@ -500,35 +500,35 @@ Patterns & Statistics (Stages 8+)
 Pre-Formal Mathematics
 </a>    
     
-<a class="sub-link" href="strand.html?strand=Comparison">
+<a class="sub-link" href="view.html?strand=Comparison">
 Comparison
 </a>
 
-<a class="sub-link" href="strand.html?strand=Counting">
+<a class="sub-link" href="view.html?strand=Counting">
 Counting
 </a>
 
-<a class="sub-link" href="strand.html?strand=Cardinality">
+<a class="sub-link" href="view.html?strand=Cardinality">
 Cardinality
 </a>
 
-<a class="sub-link" href="strand.html?strand=Composition">
+<a class="sub-link" href="view.html?strand=Composition">
 Composition
 </a>
 
-<a class="sub-link" href="strand.html?strand=Place Value">
+<a class="sub-link" href="view.html?strand=Place Value">
 Place Value
 </a>
 
-<a class="sub-link" href="strand.html?strand=Addition and Subtraction">
+<a class="sub-link" href="view.html?strand=Addition and Subtraction">
 Addition &amp; Subtraction
 </a>
 
-<a class="sub-link" href="strand.html?strand=Multiplication and Division">
+<a class="sub-link" href="view.html?strand=Multiplication and Division">
 Multiplication &amp; Division
 </a>
 
-<a class="sub-link" href="strand.html?strand=Fractions">
+<a class="sub-link" href="view.html?strand=Fractions">
 Fractions
 </a>
 
@@ -538,19 +538,19 @@ Fractions
 
 <summary>📐 Shape, Space &amp; Measure</summary>
 
-<a class="sub-link" href="strand.html?strand=Shape">
+<a class="sub-link" href="view.html?strand=Shape">
 Shape
 </a>
 
-<a class="sub-link" href="strand.html?strand=Spatial Awareness">
+<a class="sub-link" href="view.html?strand=Spatial Awareness">
 Spatial Awareness
 </a>
 
-<a class="sub-link" href="strand.html?strand=Measures">
+<a class="sub-link" href="view.html?strand=Measures">
 Measures
 </a>
 
-<a class="sub-link" href="strand.html?strand=Patterns and Statistics">
+<a class="sub-link" href="view.html?strand=Patterns and Statistics">
 Patterns &amp; Statistics
 </a>
 
@@ -559,10 +559,6 @@ Patterns &amp; Statistics
 </div>
 
 <!-- CURRICULUM CYCLES -->
-
-<div class="section searchable">
-
-<h2>Browse by Curriculum Cycle</h2>
 
 <div class="section searchable">
 
@@ -636,16 +632,6 @@ New Siblands School Mathematics Curriculum
 </div>
 
 <script>
-
-async function buildCycles(){
-
-const data = await loadCurriculum();
-
-buildCycleTable(data,1);
-buildCycleTable(data,2);
-buildCycleTable(data,3);
-
-}
 
 function buildCycleTable(data,cycle){
 
@@ -725,7 +711,7 @@ html += `
 
 ${item.Subject} -
 
-<a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
 ${item.Strand}
 </a>
 
@@ -751,7 +737,7 @@ html += `
 
 ${item.Subject} -
 
-<a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
 ${item.Strand}
 </a>
 
@@ -777,7 +763,7 @@ html += `
 
 ${item.Subject} -
 
-<a href="strand.html?strand=${encodeURIComponent(item.Strand)}">
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
 ${item.Strand}
 </a>
 

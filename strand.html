@@ -213,10 +213,10 @@ if(levelTargets.length === 0){
 }
 
 html += `
-<div class="level" id="level${level}">
+<div class="level" id="stage${level}">
 
 <div class="level-title">
-Level ${level}
+Stage ${level}
 </div>
 `;
 
@@ -364,8 +364,8 @@ html += '</div>';
 document.getElementById('levelNav').innerHTML =
 levels.map(level =>
 
-`<a href="#level${level}" class="jump">
-Level ${level}
+`<a href="#stage${level}" class="jump">
+Stage ${level}
 </a>`
 
 ).join('');

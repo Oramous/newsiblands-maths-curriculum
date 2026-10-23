@@ -520,68 +520,128 @@ ${item.Target}
 ${item.Pathway}
 </div>
 
+${
+item.Breakdown
+?
+`
 <h3 class="section-title">
 Target Breakdown
 </h3>
 
 <p>${item.Breakdown}</p>
+`
+:
+''
+}
 
+${
+item.Emerging
+?
+`
 <h3 class="section-title">
 Emerging
 </h3>
 
 <p>${item.Emerging}</p>
+`
+:
+''
+}
 
+${
+item.Developing
+?
+`
 <h3 class="section-title">
 Developing
 </h3>
 
 <p>${item.Developing}</p>
+`
+:
+''
+}
 
+${
+item.Secure
+?
+`
 <h3 class="section-title">
 Secure
 </h3>
 
 <p>${item.Secure}</p>
+`
+:
+''
+}
 
+${
+item.Activities
+?
+`
 <h3 class="section-title">
 Suggested Activities
 </h3>
 
 <ul>
 ${
-(item.Activities || "")
+item.Activities
 .split("|")
 .map(x => `<li>${x.trim()}</li>`)
 .join("")
 }
 </ul>
+`
+:
+''
+}
 
-
+${
+item.Vocab
+?
+`
 <h3 class="section-title">
 Vocabulary
 </h3>
 
 ${
-(item.Vocab || "")
+item.Vocab
 .split("|")
 .map(word =>
 `<span class="tag">${word.trim()}</span>`
 )
 .join("")
 }
+`
+:
+''
+}
 
+${
+item.Resources
+?
+`
 <h3 class="section-title">
 Resources
 </h3>
 
 <p>${item.Resources}</p>
+`
+:
+''
+}
 
+${
+item['White Rose']
+?
+`
 <h3 class="section-title">
 White Rose
 </h3>
 
 <p>
+
 <a
 href="${item['White Rose']}"
 target="_blank"
@@ -590,14 +650,31 @@ class="white-rose-btn">
 📖 White Rose Resource
 
 </a>
-</p>
 
+</p>
+`
+:
+''
+}
+
+${
+item.Misconceptions
+?
+`
 <h3 class="section-title">
 Common Misconceptions
 </h3>
 
 <p>${item.Misconceptions}</p>
+`
+:
+''
+}
 
+${
+item.Cycle || item.Term
+?
+`
 <h3 class="section-title">
 Curriculum Cycle
 </h3>
@@ -606,7 +683,15 @@ Curriculum Cycle
 Cycle ${item.Cycle}
 Term ${item.Term}
 </p>
+`
+:
+''
+}
 
+${
+item['Long term EHCP Target']
+?
+`
 <h3 class="section-title">
 Long Term EHCP Target
 </h3>
@@ -614,14 +699,26 @@ Long Term EHCP Target
 <p>
 ${item['Long term EHCP Target']}
 </p>
+`
+:
+''
+}
 
+${
+item['Next Steps within level']
+?
+`
 <h3 class="section-title">
-Next Steps Within Level
+Next Steps Within Stage
 </h3>
 
 <p>
 ${item['Next Steps within level']}
 </p>
+`
+:
+''
+}
 
 </div>
 

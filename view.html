@@ -140,6 +140,37 @@ border:2px solid #ddd;
 
 }
 
+.intro-box{
+
+background:white;
+padding:25px;
+border-radius:15px;
+margin-bottom:25px;
+
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}
+
+.intro-box h2{
+
+color:#003B5C;
+margin-top:20px;
+margin-bottom:10px;
+
+}
+
+.intro-box ul{
+
+padding-left:20px;
+
+}
+
+.intro-box li{
+
+margin-bottom:8px;
+
+}
+  
 </style>
 
 </head>
@@ -151,6 +182,9 @@ border:2px solid #ddd;
 </a>
 
 <h1 id="strandTitle"></h1>
+
+<div id="strandIntro"></div>
+
 <div id="levelNav"></div>
 
 <input
@@ -216,10 +250,81 @@ document.getElementById('strandTitle').innerText =
 const data =
 await loadCurriculum();
 
+const strandInfo =
+await loadStrandInfo();
+
 console.log(data);
 
 const container =
 document.getElementById('curriculum');
+
+if(strand){
+
+    const info = strandInfo.find(x =>
+
+        x.Strand &&
+        x.Strand.trim().toLowerCase() ===
+        strand.trim().toLowerCase()
+
+    );
+
+    if(info){
+
+        document.getElementById('strandIntro').innerHTML = `
+
+        <div class="intro-box">
+
+            <h2>Introduction</h2>
+
+            <p>
+            ${info['Introduction'] || ''}
+            </p>
+
+            <h2>Why is it important?</h2>
+
+            <p>
+            ${info['Why is it important?'] || ''}
+            </p>
+
+            <h2>Pathway Aim</h2>
+
+            <p>
+            ${info['Pathway Aim'] || ''}
+            </p>
+
+            <h2>Example Evidence Statements</h2>
+
+            <ul>
+
+            ${
+            (info['Example evidence statements'] || '')
+            .split('|')
+            .map(x => `<li>${x.trim()}</li>`)
+            .join('')
+            }
+
+            </ul>
+
+            <h2>Learning Areas</h2>
+
+            <ul>
+
+            ${
+            (info['Learning Areas'] || '')
+            .split('|')
+            .map(x => `<li>${x.trim()}</li>`)
+            .join('')
+            }
+
+            </ul>
+
+        </div>
+
+        `;
+
+    }
+
+}
   
 let filtered = data;
 

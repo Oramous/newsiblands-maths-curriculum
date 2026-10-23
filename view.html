@@ -272,55 +272,87 @@ if(strand){
 
         document.getElementById('strandIntro').innerHTML = `
 
-        <div class="intro-box">
+<div class="intro-box">
 
-            <h2>Introduction</h2>
+    <h2>Introduction</h2>
 
-            <p>
-            ${info['Introduction'] || ''}
-            </p>
+    <p>
+    ${info['Introduction'] || ''}
+    </p>
 
-            <h2>Why is it important?</h2>
+    ${
+    info['Why is it important?']
+    ?
+    `
+    <h2>Why is it important?</h2>
 
-            <p>
-            ${info['Why is it important?'] || ''}
-            </p>
+    <p>
+    ${info['Why is it important?']}
+    </p>
+    `
+    :
+    ''
+    }
 
-            <h2>Pathway Aim</h2>
+    ${
+    info['Pathway Aim']
+    ?
+    `
+    <h2>Pathway Aim</h2>
 
-            <p>
-            ${info['Pathway Aim'] || ''}
-            </p>
+    <p>
+    ${info['Pathway Aim']}
+    </p>
+    `
+    :
+    ''
+    }
 
-            <h2>Example Evidence Statements</h2>
+    ${
+    info['Example evidence statements']
+    ?
+    `
+    <h2>Example Evidence Statements</h2>
 
-            <ul>
+    <ul>
 
-            ${
-            (info['Example evidence statements'] || '')
-            .split('|')
-            .map(x => `<li>${x.trim()}</li>`)
-            .join('')
-            }
+    ${
+    info['Example evidence statements']
+        .split('|')
+        .map(x => `<li>${x.trim()}</li>`)
+        .join('')
+    }
 
-            </ul>
+    </ul>
+    `
+    :
+    ''
+    }
 
-            <h2>Learning Areas</h2>
+    ${
+    info['Learning Areas']
+    ?
+    `
+    <h2>Learning Areas</h2>
 
-            <ul>
+    <ul>
 
-            ${
-            (info['Learning Areas'] || '')
-            .split('|')
-            .map(x => `<li>${x.trim()}</li>`)
-            .join('')
-            }
+    ${
+    info['Learning Areas']
+        .split('|')
+        .map(x => `<li>${x.trim()}</li>`)
+        .join('')
+    }
 
-            </ul>
+    </ul>
+    `
+    :
+    ''
+    }
 
-        </div>
+</div>
 
-        `;
+`;
 
     }
 

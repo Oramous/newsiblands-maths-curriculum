@@ -170,6 +170,67 @@ padding-left:20px;
 margin-bottom:8px;
 
 }
+
+.section-badge{
+
+display:inline-block;
+
+padding:6px 14px;
+
+border-radius:20px;
+
+font-weight:bold;
+
+margin-top:15px;
+margin-bottom:10px;
+
+color:white;
+
+}
+
+.breakdown-badge{
+background:#003B5C;
+}
+
+.emerging-badge{
+background:#5CB85C;
+}
+
+.developing-badge{
+background:#F0AD4E;
+}
+
+.secure-badge{
+background:#0077B6;
+}
+
+.activities-badge{
+background:#6F42C1;
+}
+
+.vocab-badge{
+background:#17A2B8;
+}
+
+.resources-badge{
+background:#6C757D;
+}
+
+.whiterose-badge{
+background:#E83E8C;
+}
+
+.misconceptions-badge{
+background:#DC3545;
+}
+
+.ehcp-badge{
+background:#20C997;
+}
+
+.nextsteps-badge{
+background:#8C564B;
+}
   
 </style>
 
@@ -524,9 +585,9 @@ ${
 item.Breakdown
 ?
 `
-<h3 class="section-title">
-Target Breakdown
-</h3>
+<div class="section-badge breakdown-badge">
+🎯 Target Breakdown
+</div>
 
 <p>${item.Breakdown}</p>
 `
@@ -538,9 +599,9 @@ ${
 item.Emerging
 ?
 `
-<h3 class="section-title">
-Emerging
-</h3>
+<div class="section-badge emerging-badge">
+🟢 Emerging
+</div>
 
 <p>${item.Emerging}</p>
 `
@@ -552,9 +613,9 @@ ${
 item.Developing
 ?
 `
-<h3 class="section-title">
-Developing
-</h3>
+<div class="section-badge developing-badge">
+🟡 Developing
+</div>
 
 <p>${item.Developing}</p>
 `
@@ -566,9 +627,9 @@ ${
 item.Secure
 ?
 `
-<h3 class="section-title">
-Secure
-</h3>
+<div class="section-badge secure-badge">
+🔵 Secure
+</div>
 
 <p>${item.Secure}</p>
 `
@@ -580,9 +641,9 @@ ${
 item.Activities
 ?
 `
-<h3 class="section-title">
-Suggested Activities
-</h3>
+<div class="section-badge activities-badge">
+🎲 Suggested Activities
+</div>
 
 <ul>
 ${
@@ -601,9 +662,9 @@ ${
 item.Vocab
 ?
 `
-<h3 class="section-title">
-Vocabulary
-</h3>
+<div class="section-badge vocab-badge">
+🗣 Vocabulary
+</div>
 
 ${
 item.Vocab
@@ -622,9 +683,9 @@ ${
 item.Resources
 ?
 `
-<h3 class="section-title">
-Resources
-</h3>
+<div class="section-badge resources-badge">
+📚 Resources
+</div>
 
 <p>${item.Resources}</p>
 `
@@ -636,9 +697,9 @@ ${
 item['White Rose']
 ?
 `
-<h3 class="section-title">
-White Rose
-</h3>
+<div class="section-badge whiterose-badge">
+📖 White Rose
+</div>
 
 <p>
 
@@ -661,9 +722,9 @@ ${
 item.Misconceptions
 ?
 `
-<h3 class="section-title">
-Common Misconceptions
-</h3>
+<div class="section-badge misconceptions-badge">
+⚠️ Common Misconceptions
+</div>
 
 <p>${item.Misconceptions}</p>
 `
@@ -675,9 +736,9 @@ ${
 item.Cycle || item.Term
 ?
 `
-<h3 class="section-title">
-Curriculum Cycle
-</h3>
+<div class="section-badge breakdown-badge">
+📅 Curriculum Cycle
+</div>
 
 <p>
 Cycle ${item.Cycle}
@@ -692,9 +753,9 @@ ${
 item['Long term EHCP Target']
 ?
 `
-<h3 class="section-title">
-Long Term EHCP Target
-</h3>
+<div class="section-badge ehcp-badge">
+🧩 Long Term EHCP Target
+</div>
 
 <p>
 ${item['Long term EHCP Target']}
@@ -708,9 +769,9 @@ ${
 item['Next Steps within level']
 ?
 `
-<h3 class="section-title">
-Next Steps Within Stage
-</h3>
+<div class="section-badge nextsteps-badge">
+🚀 Next Steps Within Stage
+</div>
 
 <p>
 ${item['Next Steps within level']}

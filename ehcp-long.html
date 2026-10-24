@@ -1,43 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Long-Term EHCP Targets</title>
+<title>Long-Term EHCP Target Finder</title>
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="data.js"></script>
 
 <style>
-
-body{
-font-family:Segoe UI,sans-serif;
-background:#F5F7FA;
-}
-
-.card{
-background:white;
-padding:20px;
-margin-bottom:15px;
-border-radius:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-h1,h2,h3{
-color:#003B5C;
-}
-
-details{
-margin-top:10px;
-}
-
-summary{
-cursor:pointer;
-font-weight:bold;
-}
 
 :root{
 --navy:#003B5C;
@@ -47,28 +21,106 @@ font-weight:bold;
 --light:#F5F7FA;
 }
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI, Arial, sans-serif;
+}
+
 body{
-font-family:Segoe UI,sans-serif;
 background:var(--light);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:260px;
+background:var(--navy);
+color:white;
+position:fixed;
+height:100%;
+overflow-y:auto;
+padding:20px;
+}
+
+.logo{
+text-align:center;
+}
+
+.logo img{
+width:120px;
+margin-bottom:10px;
+}
+
+.sidebar h2{
+text-align:center;
+}
+
+.sidebar p{
+text-align:center;
+margin-bottom:30px;
+}
+
+.sidebar a{
+color:white;
+text-decoration:none;
+display:block;
+padding:12px;
+border-radius:8px;
+}
+
+.sidebar a:hover{
+background:rgba(255,255,255,0.15);
+}
+
+/* MAIN */
+
+.main{
+margin-left:260px;
 padding:30px;
 }
 
-.subject-heading{
-
-background:#003B5C;
+.back{
+display:inline-block;
+padding:10px 15px;
+background:var(--navy);
 color:white;
-
-padding:15px;
-
-border-radius:10px;
-
-font-size:28px;
-font-weight:bold;
-
-margin-top:30px;
+text-decoration:none;
+border-radius:8px;
 margin-bottom:20px;
-
 }
+
+h1{
+color:var(--navy);
+margin-bottom:20px;
+}
+
+/* SUBJECT BUTTONS */
+
+.subject-buttons{
+display:flex;
+gap:15px;
+margin-bottom:30px;
+}
+
+.subject-btn{
+padding:14px 25px;
+border:none;
+border-radius:10px;
+background:white;
+cursor:pointer;
+font-size:18px;
+font-weight:bold;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.subject-btn.active{
+background:var(--navy);
+color:white;
+}
+
+/* CONTENT */
 
 .pathway-heading{
 
@@ -76,14 +128,44 @@ display:inline-block;
 
 padding:8px 15px;
 
-background:#0077B6;
-color:white;
-
 border-radius:20px;
 
+margin-top:20px;
+margin-bottom:15px;
+
 font-weight:bold;
+color:white;
+
+}
+
+.belonging-heading{
+background:var(--green);
+}
+
+.achievement-heading{
+background:var(--blue);
+}
+
+.celebration-heading{
+background:var(--purple);
+}
+
+.stage-heading{
+
+background:white;
+
+padding:15px;
+
+border-radius:10px;
 
 margin-bottom:15px;
+
+font-size:20px;
+font-weight:bold;
+
+color:var(--navy);
+
+box-shadow:0 2px 6px rgba(0,0,0,.08);
 
 }
 
@@ -93,196 +175,142 @@ background:white;
 
 padding:20px;
 
-border-radius:15px;
-
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-
-margin-bottom:20px;
-
-}
-
-.target-card{
-
-background:white;
-
-padding:15px;
-
 border-radius:12px;
 
-box-shadow:0 2px 6px rgba(0,0,0,.08);
+margin-bottom:15px;
 
-margin-bottom:12px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
 
 }
 
 details{
-
 margin-top:10px;
-
 }
 
 summary{
-
 cursor:pointer;
-
 font-weight:bold;
-
-color:#003B5C;
-
+color:var(--navy);
+padding:5px;
 }
 
-h1{
-
-color:#003B5C;
-
+.info-row{
+margin:8px 0;
 }
 
-.back{
+.target-box{
+background:#f8f9fb;
+padding:12px;
+border-radius:8px;
+margin-top:10px;
+}
+
+.tag{
 
 display:inline-block;
 
-padding:10px 15px;
+padding:6px 12px;
 
-background:#003B5C;
+margin:3px;
 
-color:white;
+background:#e6f2fb;
 
-text-decoration:none;
-
-border-radius:8px;
-
-margin-bottom:20px;
+border-radius:20px;
 
 }
 
-.subject-buttons{
+.section-badge{
 
-display:flex;
+display:inline-block;
 
-gap:15px;
+padding:6px 14px;
 
-margin-bottom:25px;
-
-}
-
-.subject-btn{
-
-padding:12px 20px;
-
-border:none;
-
-border-radius:10px;
-
-background:white;
-
-cursor:pointer;
+border-radius:20px;
 
 font-weight:bold;
 
-box-shadow:0 2px 6px rgba(0,0,0,.08);
-
-}
-
-.subject-btn.active{
-
-background:#003B5C;
+margin-top:15px;
+margin-bottom:10px;
 
 color:white;
 
-}  
+}
+
+.breakdown-badge{
+background:#003B5C;
+}
+
+.emerging-badge{
+background:#5CB85C;
+}
+
+.developing-badge{
+background:#F0AD4E;
+}
+
+.secure-badge{
+background:#0077B6;
+}
+
+.activities-badge{
+background:#6F42C1;
+}
+
+.vocab-badge{
+background:#17A2B8;
+}
+
+.resources-badge{
+background:#6C757D;
+}
+
+.ehcp-badge{
+background:#20C997;
+}
+
+.nextsteps-badge{
+background:#8C564B;
+}
+
+.pathway{
+display:inline-block;
+padding:6px 14px;
+border-radius:20px;
+font-weight:bold;
+color:white;
+margin-bottom:15px;
+}
+
+.belonging{
+background:var(--green);
+}
+
+.achievement{
+background:var(--blue);
+}
+
+.celebration{
+background:var(--purple);
+}
+
+@media(max-width:1000px){
 
 .sidebar{
-    width:260px;
-    background:#003B5C;
-    color:white;
-    position:fixed;
-    height:100%;
-    overflow-y:auto;
-    padding:20px;
-}
-
-.logo{
-    text-align:center;
-}
-
-.logo img{
-    width:120px;
-    margin-bottom:10px;
-}
-
-.sidebar h2{
-    text-align:center;
-}
-
-.sidebar p{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.sidebar a{
-    color:white;
-    text-decoration:none;
-    display:block;
-    padding:12px;
-    border-radius:8px;
-}
-
-.sidebar a:hover{
-    background:rgba(255,255,255,0.15);
-}
-    
-.main{
-    margin-left:260px;
-    padding:30px;
-}
-
-.sidebar{
-    width:260px;
-    background:#003B5C;
-    color:white;
-    position:fixed;
-    height:100vh;
-    overflow-y:auto;
-    padding:20px;
-    top:0;
-    left:0;
+width:100%;
+position:relative;
+height:auto;
 }
 
 .main{
-    margin-left:260px;
-    padding:30px;
+margin-left:0;
 }
 
-.logo{
-    text-align:center;
+.subject-buttons{
+flex-direction:column;
 }
 
-.logo img{
-    width:120px;
-    margin-bottom:10px;
 }
 
-.sidebar h2{
-    text-align:center;
-}
-
-.sidebar p{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.sidebar a{
-    color:white;
-    text-decoration:none;
-    display:block;
-    padding:12px;
-    border-radius:8px;
-}
-
-.sidebar a:hover{
-    background:rgba(255,255,255,0.15);
-}
-    
 </style>
 
 </head>
@@ -302,19 +330,13 @@ color:white;
 </div>
 
 <a href="index.html">Home</a>
-
 <a href="ehcp-long.html">EHCP Target Finder</a>
-
-<a href="Curriculum.html">
-Curriculum Documents
-</a>
-
+<a href="Curriculum.html">Curriculum Documents</a>
 <a href="#">Assessment</a>
-
 <a href="#">White Rose Links</a>
 
-</div>  
-  
+</div>
+
 <div class="main">
 
 <a href="index.html" class="back">
@@ -325,7 +347,8 @@ Curriculum Documents
 
 <div class="subject-buttons">
 
-<button id="subjectBtnNumber"
+<button
+id="subjectBtnNumber"
 class="subject-btn active"
 onclick="showSubject('Number')">
 
@@ -333,7 +356,8 @@ Number
 
 </button>
 
-<button id="subjectBtnSSM"
+<button
+id="subjectBtnSSM"
 class="subject-btn"
 onclick="showSubject('SSM')">
 
@@ -345,282 +369,33 @@ Shape, Space & Measure
 
 <div id="content"></div>
 
+</div>
 
 <script>
 
 let allData = [];
-let currentSubject = "Number";
-  
+
 async function buildPage(){
 
-allData =
-await loadCurriculum();
+allData = await loadCurriculum();
 
-const params =
-new URLSearchParams(window.location.search);
-
-const selected =
-params.get("target");
-
-let html = "";
-
-if(selected){
-
-let matching =
-allData.filter(item =>
-item['Long term EHCP Target'] === selected
-);
-
-let first = matching[0];
-
-html += `
-<div class="card">
-
-<h2>${selected}</h2>
-
-<p><strong>Subject:</strong> ${first.Subject}</p>
-
-<p><strong>Strand:</strong> ${first.Strand}</p>
-
-<p><strong>Learning Area:</strong> ${first['Learning Area']}</p>
-
-<p>
-<strong>Stage Range:</strong>
-
-${Math.min(...matching.map(x=>Number(x.Level)))}
--
-${Math.max(...matching.map(x=>Number(x.Level)))}
-
-</p>
-
-</div>
-`;
-
-matching
-.sort((a,b)=>Number(a.Level)-Number(b.Level))
-.forEach(item=>{
-
-html += `
-
-<div class="target-card">
-
-<details>
-
-<summary>
-
-Stage ${item.Level}
-
--
-
-${item.Target}
-
-</summary>
-
-<p>
-
-<strong>Subject:</strong>
-
-${item.Subject}
-
-</p>
-
-<p>
-
-<strong>Strand:</strong>
-
-${item.Strand}
-
-</p>
-
-<p>
-
-<strong>Learning Area:</strong>
-
-${item['Learning Area'] || ''}
-
-</p>
-
-<p>
-
-<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
-
-View full target information
-
-</a>
-
-</p>
-
-</details>
-
-</div>
-
-`;
-
-});
-
-}
-else{
-
-buildOverview("Number");
+showSubject('Number');
 
 }
 
-if(
-row.Pathway &&
-row.Pathway.toLowerCase().includes('celebr')
-){
-    pathwayClass = 'celebration';
-}
-
-html += `
-
-<details>
-
-<summary>
-
-Stage ${row.Level}
-
--
-${row.Target}
-
-</summary>
-
-<div class="content">
-
-<div class="pathway ${pathwayClass}">
-${row.Pathway}
-</div>
-
-${
-row.Breakdown
-?
-`
-<div class="section-badge breakdown-badge">
-🎯 Target Breakdown
-</div>
-
-<p>${row.Breakdown}</p>
-`
-:
-''
-}
-
-${
-row.Emerging
-?
-`
-<div class="section-badge emerging-badge">
-🟢 Emerging
-</div>
-
-<p>${row.Emerging}</p>
-`
-:
-''
-}
-
-${
-row.Developing
-?
-`
-<div class="section-badge developing-badge">
-🟡 Developing
-</div>
-
-<p>${row.Developing}</p>
-`
-:
-''
-}
-
-${
-row.Secure
-?
-`
-<div class="section-badge secure-badge">
-🔵 Secure
-</div>
-
-<p>${row.Secure}</p>
-`
-:
-''
-}
-
-${
-row.Activities
-?
-`
-<div class="section-badge activities-badge">
-🎲 Suggested Activities
-</div>
-
-<ul>
-${
-row.Activities
-.split("|")
-.map(x => `<li>${x.trim()}</li>`)
-.join("")
-}
-</ul>
-`
-:
-''
-}
-
-${
-row.Vocab
-?
-`
-<div class="section-badge vocab-badge">
-🗣 Vocabulary
-</div>
-
-${
-row.Vocab
-.split("|")
-.map(word =>
-`<span class="tag">${word.trim()}</span>`
-)
-.join("")
-}
-`
-:
-''
-}
-
-</div>
-
-</details>
-
-`;
-
-});
-html += `
-</details>
-`;
-
-});
-
-});
-
-html += `
-</div>
-`;
-
-});
-
-});
+function showSubject(subject){
 
 document
-.getElementById('content')
-.innerHTML = html;
+.querySelectorAll('.subject-btn')
+.forEach(btn => btn.classList.remove('active'));
 
-}
-
-}
-
-function buildOverview(subject){
+document.getElementById(
+subject === 'Number'
+?
+'subjectBtnNumber'
+:
+'subjectBtnSSM'
+).classList.add('active');
 
 let html = '';
 
@@ -636,8 +411,20 @@ rows.map(x => x.Pathway)
 
 pathways.forEach(pathway => {
 
+let pathwayClass = 'achievement-heading';
+
+if(pathway.toLowerCase().includes('belong')){
+pathwayClass = 'belonging-heading';
+}
+
+if(pathway.toLowerCase().includes('celebr')){
+pathwayClass = 'celebration-heading';
+}
+
 html += `
-<h2>${pathway}</h2>
+<div class="pathway-heading ${pathwayClass}">
+${pathway}
+</div>
 `;
 
 let pathwayRows =
@@ -655,11 +442,11 @@ x => Number(x.Level))
 stages.forEach(stage => {
 
 html += `
-<div class="card">
+<div class="stage-heading">
 
-<h3>
 Stage ${stage}
-</h3>
+
+</div>
 `;
 
 let stageRows =
@@ -675,7 +462,9 @@ stageRows.map(x => x.Strand)
 strands.forEach(strand => {
 
 html += `
-<h4>${strand}</h4>
+<div class="card">
+
+<h3>${strand}</h3>
 `;
 
 let targets =
@@ -688,16 +477,6 @@ x=>x['Long term EHCP Target']
 )];
 
 targets.forEach(target=>{
-
-html += `
-
-<details>
-
-<summary>
-${target}
-</summary>
-
-`;
 
 let matchingRows =
 allData.filter(x =>
@@ -718,23 +497,31 @@ x=>Number(x.Level))
 
 html += `
 
-<p>
+<details>
+
+<summary>
+
+${target}
+
+</summary>
+
+<div class="info-row">
 
 <strong>Learning Area:</strong>
 
-${matchingRows[0]['Learning Area']}
+${matchingRows[0]['Learning Area'] || ''}
 
-</p>
+</div>
 
-<p>
+<div class="info-row">
 
 <strong>Stage Range:</strong>
 
-${minStage}
+Stage ${minStage}
 -
-${maxStage}
+Stage ${maxStage}
 
-</p>
+</div>
 
 `;
 
@@ -745,35 +532,140 @@ Number(a.Level)
 Number(b.Level))
 .forEach(row=>{
 
-let pathwayClass = 'achievement';
+let pathwayColour = 'achievement';
 
 if(
 row.Pathway &&
 row.Pathway.toLowerCase().includes('belong')
 ){
-    pathwayClass = 'belonging';
+pathwayColour = 'belonging';
 }
-    
-function showSubject(subject){
 
-currentSubject = subject;
+if(
+row.Pathway &&
+row.Pathway.toLowerCase().includes('celebr')
+){
+pathwayColour = 'celebration';
+}
 
-document
-.querySelectorAll('.subject-btn')
-.forEach(btn =>
-btn.classList.remove('active'));
+html += `
 
-document
-.getElementById(
-subject === 'Number'
-?
-'subjectBtnNumber'
-:
-'subjectBtnSSM'
-)
-.classList.add('active');
+<details>
 
-buildOverview(subject);
+<summary>
+
+Stage ${row.Level}
+
+-
+
+${row.Target}
+
+</summary>
+
+<div class="target-box">
+
+<div class="pathway ${pathwayColour}">
+${row.Pathway}
+</div>
+
+${row.Breakdown ? `
+<div class="section-badge breakdown-badge">
+🎯 Target Breakdown
+</div>
+<p>${row.Breakdown}</p>
+` : ''}
+
+${row.Emerging ? `
+<div class="section-badge emerging-badge">
+🟢 Emerging
+</div>
+<p>${row.Emerging}</p>
+` : ''}
+
+${row.Developing ? `
+<div class="section-badge developing-badge">
+🟡 Developing
+</div>
+<p>${row.Developing}</p>
+` : ''}
+
+${row.Secure ? `
+<div class="section-badge secure-badge">
+🔵 Secure
+</div>
+<p>${row.Secure}</p>
+` : ''}
+
+${row.Activities ? `
+<div class="section-badge activities-badge">
+🎲 Suggested Activities
+</div>
+<ul>
+${row.Activities
+.split("|")
+.map(x=>`<li>${x.trim()}</li>`)
+.join("")}
+</ul>
+` : ''}
+
+${row.Vocab ? `
+<div class="section-badge vocab-badge">
+🗣 Vocabulary
+</div>
+
+${row.Vocab
+.split("|")
+.map(word =>
+`<span class="tag">${word.trim()}</span>`)
+.join("")}
+` : ''}
+
+${row.Resources ? `
+<div class="section-badge resources-badge">
+📚 Resources
+</div>
+<p>${row.Resources}</p>
+` : ''}
+
+${row['Long term EHCP Target'] ? `
+<div class="section-badge ehcp-badge">
+🧩 Long-Term EHCP Target
+</div>
+<p>${row['Long term EHCP Target']}</p>
+` : ''}
+
+${row['Next Steps within level'] ? `
+<div class="section-badge nextsteps-badge">
+🚀 Next Steps Within Stage
+</div>
+<p>${row['Next Steps within level']}</p>
+` : ''}
+
+</div>
+
+</details>
+
+`;
+
+});
+
+html += `
+</details>
+`;
+
+});
+
+html += `
+</div>
+`;
+
+});
+
+});
+
+});
+
+document.getElementById('content').innerHTML = html;
 
 }
 
@@ -781,8 +673,6 @@ buildPage();
 
 </script>
 
-</div>
-  
 </body>
 
 </html>

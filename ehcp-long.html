@@ -311,6 +311,24 @@ flex-direction:column;
 
 }
 
+.search-box{
+
+width:100%;
+
+padding:15px;
+
+border:2px solid #ddd;
+
+border-radius:10px;
+
+margin-bottom:25px;
+
+font-size:16px;
+
+background:white;
+
+}
+  
 </style>
 
 </head>
@@ -367,6 +385,13 @@ Shape, Space & Measure
 
 </div>
 
+<input
+type="text"
+id="ehcpSearch"
+class="search-box"
+placeholder="Search long-term targets, strands, learning areas or short-term targets..."
+onkeyup="searchEHCP()">
+  
 <div id="content"></div>
 
 </div>
@@ -462,7 +487,7 @@ stageRows.map(x => x.Strand)
 strands.forEach(strand => {
 
 html += `
-<div class="card">
+<div class="card ehcp-card">
 
 <h3>${strand}</h3>
 `;
@@ -669,6 +694,36 @@ document.getElementById('content').innerHTML = html;
 
 }
 
+function searchEHCP(){
+
+let search =
+document.getElementById('ehcpSearch')
+.value
+.toLowerCase();
+
+document
+.querySelectorAll('.ehcp-card')
+.forEach(card => {
+
+if(
+card.innerText
+.toLowerCase()
+.includes(search)
+){
+
+card.style.display = '';
+
+}
+else{
+
+card.style.display = 'none';
+
+}
+
+});
+
+}  
+  
 buildPage();
 
 </script>

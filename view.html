@@ -844,19 +844,197 @@ item['Long term EHCP Target']
 🧩 Long Term EHCP Target
 </div>
 
-<p>
+<details>
 
-<a href="ehcp-long.html?target=${encodeURIComponent(item['Long term EHCP Target'])}">
+<summary>
 
 ${item['Long term EHCP Target']}
 
-</a>
+</summary>
+
+<div class="target-box">
+
+<p>
+
+<strong>Strand:</strong>
+
+${item.Strand}
 
 </p>
+
+<p>
+
+<strong>Learning Area:</strong>
+
+${item['Learning Area'] || ''}
+
+</p>
+
+<p>
+
+<strong>Stage Range:</strong>
+
+Stage ${Math.min(
+...filtered
+.filter(x =>
+x['Long term EHCP Target'] === item['Long term EHCP Target']
+)
+.map(x => Number(x.Level))
+)}
+-
+Stage ${Math.max(
+...filtered
+.filter(x =>
+x['Long term EHCP Target'] === item['Long term EHCP Target']
+)
+.map(x => Number(x.Level))
+)}
+
+</p>
+
+<div class="section-badge ehcp-badge">
+Associated Targets
+</div>
+
+${
+filtered
+.filter(x =>
+x['Long term EHCP Target'] === item['Long term EHCP Target']
+)
+.sort((a,b)=>Number(a.Level)-Number(b.Level))
+.map(x =>
+
+`
+
+<details>
+
+<summary>
+
+Stage ${x.Level}
+
+-
+
+${x.Target}
+
+</summary>
+
+<div class="target-box">
+
+${
+x.Breakdown
+?
+`
+<div class="section-badge breakdown-badge">
+🎯 Target Breakdown
+</div>
+
+<p>${x.Breakdown}</p>
 `
 :
 ''
 }
+
+${
+x.Emerging
+?
+`
+<div class="section-badge emerging-badge">
+🟢 Emerging
+</div>
+
+<p>${x.Emerging}</p>
+`
+:
+''
+}
+
+${
+x.Developing
+?
+`
+<div class="section-badge developing-badge">
+🟡 Developing
+</div>
+
+<p>${x.Developing}</p>
+`
+:
+''
+}
+
+${
+x.Secure
+?
+`
+<div class="section-badge secure-badge">
+🔵 Secure
+</div>
+
+<p>${x.Secure}</p>
+`
+:
+''
+}
+
+${
+x.Activities
+?
+`
+<div class="section-badge activities-badge">
+🎲 Suggested Activities
+</div>
+
+<ul>
+${
+x.Activities
+.split("|")
+.map(a => `<li>${a.trim()}</li>`)
+.join("")
+}
+</ul>
+`
+:
+''
+}
+
+${
+x.Vocab
+?
+`
+<div class="section-badge vocab-badge">
+🗣 Vocabulary
+</div>
+
+${
+x.Vocab
+.split("|")
+.map(word =>
+`<span class="tag">${word.trim()}</span>`
+)
+.join("")
+}
+`
+:
+''
+}
+
+</div>
+
+</details>
+
+`
+)
+.join("")
+}
+
+</div>
+
+</details>
+`
+:
+''
+}
+
 
 ${
 item['Next Steps within level']

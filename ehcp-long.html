@@ -191,12 +191,51 @@ background:#003B5C;
 color:white;
 
 }  
+
+.sidebar{
+    width:260px;
+    background:#003B5C;
+    color:white;
+    position:fixed;
+    height:100%;
+    overflow-y:auto;
+    padding:20px;
+}
+
+.main{
+    margin-left:260px;
+    padding:30px;
+}
   
 </style>
 
 </head>
 
 <body>
+
+<div class="sidebar">
+
+<div class="logo">
+
+<img src="logo.png" alt="School Logo">
+
+<h2>New Siblands</h2>
+
+<p>Mathematics Curriculum</p>
+
+</div>
+
+<a href="#">Home</a>
+<a href="#">Assessment</a>
+<a href="#">EHCP Mapping</a>
+<a href="Curriculum.html">
+Curriculum Documents
+</a>
+<a href="#">White Rose Links</a>
+
+</div>  
+  
+<div class="main">
 
 <a href="index.html" class="back">
 ← Back to Homepage
@@ -471,6 +510,22 @@ Number(a.Level)
 Number(b.Level))
 .forEach(row=>{
 
+let pathwayClass = 'achievement';
+
+if(
+row.Pathway &&
+row.Pathway.toLowerCase().includes('belong')
+){
+    pathwayClass = 'belonging';
+}
+
+if(
+row.Pathway &&
+row.Pathway.toLowerCase().includes('celebr')
+){
+    pathwayClass = 'celebration';
+}
+
 html += `
 
 <details>
@@ -484,22 +539,117 @@ ${row.Target}
 
 </summary>
 
-<p>
+<div class="content">
 
-<a href="view.html?strand=${encodeURIComponent(row.Strand)}">
+<div class="pathway ${pathwayClass}">
+${row.Pathway}
+</div>
 
-View full target information
+${
+row.Breakdown
+?
+`
+<div class="section-badge breakdown-badge">
+🎯 Target Breakdown
+</div>
 
-</a>
+<p>${row.Breakdown}</p>
+`
+:
+''
+}
 
-</p>
+${
+row.Emerging
+?
+`
+<div class="section-badge emerging-badge">
+🟢 Emerging
+</div>
+
+<p>${row.Emerging}</p>
+`
+:
+''
+}
+
+${
+row.Developing
+?
+`
+<div class="section-badge developing-badge">
+🟡 Developing
+</div>
+
+<p>${row.Developing}</p>
+`
+:
+''
+}
+
+${
+row.Secure
+?
+`
+<div class="section-badge secure-badge">
+🔵 Secure
+</div>
+
+<p>${row.Secure}</p>
+`
+:
+''
+}
+
+${
+row.Activities
+?
+`
+<div class="section-badge activities-badge">
+🎲 Suggested Activities
+</div>
+
+<ul>
+${
+row.Activities
+.split("|")
+.map(x => `<li>${x.trim()}</li>`)
+.join("")
+}
+</ul>
+`
+:
+''
+}
+
+${
+row.Vocab
+?
+`
+<div class="section-badge vocab-badge">
+🗣 Vocabulary
+</div>
+
+${
+row.Vocab
+.split("|")
+.map(word =>
+`<span class="tag">${word.trim()}</span>`
+)
+.join("")
+}
+`
+:
+''
+}
+
+</div>
 
 </details>
 
 `;
 
 });
-
 html += `
 </details>
 `;
@@ -551,6 +701,8 @@ buildPage();
 
 </script>
 
+</div>
+  
 </body>
 
 </html>

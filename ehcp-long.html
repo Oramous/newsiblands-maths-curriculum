@@ -40,6 +40,104 @@ cursor:pointer;
 font-weight:bold;
 }
 
+:root{
+--navy:#003B5C;
+--blue:#0077B6;
+--green:#5CB85C;
+--purple:#7B5CB8;
+--light:#F5F7FA;
+}
+
+body{
+font-family:Segoe UI,sans-serif;
+background:var(--light);
+padding:30px;
+}
+
+.subject-heading{
+
+background:#003B5C;
+color:white;
+
+padding:15px;
+
+border-radius:10px;
+
+font-size:28px;
+font-weight:bold;
+
+margin-top:30px;
+margin-bottom:20px;
+
+}
+
+.pathway-heading{
+
+display:inline-block;
+
+padding:8px 15px;
+
+background:#0077B6;
+color:white;
+
+border-radius:20px;
+
+font-weight:bold;
+
+margin-bottom:15px;
+
+}
+
+.card{
+
+background:white;
+
+padding:20px;
+
+border-radius:15px;
+
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+margin-bottom:20px;
+
+}
+
+.target-card{
+
+background:white;
+
+padding:15px;
+
+border-radius:12px;
+
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+margin-bottom:12px;
+
+}
+
+details{
+
+margin-top:10px;
+
+}
+
+summary{
+
+cursor:pointer;
+
+font-weight:bold;
+
+color:#003B5C;
+
+}
+
+h1{
+
+color:#003B5C;
+
+}
+  
 </style>
 
 </head>
@@ -103,7 +201,7 @@ matching
 
 html += `
 
-<div class="card">
+<div class="target-card">
 
 <details>
 
@@ -119,9 +217,33 @@ ${item.Target}
 
 <p>
 
+<strong>Subject:</strong>
+
+${item.Subject}
+
+</p>
+
+<p>
+
+<strong>Strand:</strong>
+
+${item.Strand}
+
+</p>
+
+<p>
+
+<strong>Learning Area:</strong>
+
+${item['Learning Area'] || ''}
+
+</p>
+
+<p>
+
 <a href="view.html?strand=${encodeURIComponent(item.Strand)}">
 
-View target information
+View full target information
 
 </a>
 
@@ -138,30 +260,118 @@ View target information
 }
 else{
 
-const targets =
-[...new Set(
+const subjects = [...new Set(
+data.map(x => x.Subject)
+)];
 
-data.map(
-x => x['Long term EHCP Target']
-)
+subjects.forEach(subject => {
 
-)].sort();
+html += `
+<div class="subject-heading">
+${subject}
+</div>
+`;
 
-targets.forEach(target=>{
+const subjectRows =
+data.filter(x => x.Subject === subject);
+
+const pathways = [...new Set(
+subjectRows.map(x => x.Pathway)
+)];
+
+pathways.forEach(pathway => {
+
+html += `
+<div class="pathway-heading">
+${pathway}
+</div>
+`;
+
+const pathwayRows =
+subjectRows.filter(x => x.Pathway === pathway);
+
+const strands = [...new Set(
+pathwayRows.map(x => x.Strand)
+)];
+
+strands.forEach(strand => {
+
+const strandRows =
+pathwayRows.filter(x => x.Strand === strand);
+
+const minStage = Math.min(
+...strandRows.map(x => Number(x.Level))
+);
+
+const maxStage = Math.max(
+...strandRows.map(x => Number(x.Level))
+);
 
 html += `
 
 <div class="card">
 
-<a href="?target=${encodeURIComponent(target)}">
+<h3>${strand}</h3>
+
+<p>
+
+<strong>Stage Range:</strong>
+
+${minStage}-${maxStage}
+
+<br>
+
+<strong>Learning Area:</strong>
+
+${strandRows[0]['Learning Area'] || ''}
+
+</p>
+
+`;
+
+const targets = [...new Set(
+strandRows.map(
+x => x['Long term EHCP Target']
+)
+)];
+
+targets.forEach(target => {
+
+html += `
+
+<details>
+
+<summary>
 
 ${target}
 
+</summary>
+
+<p>
+
+<a href="?target=${encodeURIComponent(target)}">
+
+Open Long-Term Target
+
 </a>
+
+</p>
+
+</details>
+
+`;
+
+});
+
+html += `
 
 </div>
 
 `;
+
+});
+
+});
 
 });
 

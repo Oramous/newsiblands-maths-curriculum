@@ -137,6 +137,60 @@ h1{
 color:#003B5C;
 
 }
+
+.back{
+
+display:inline-block;
+
+padding:10px 15px;
+
+background:#003B5C;
+
+color:white;
+
+text-decoration:none;
+
+border-radius:8px;
+
+margin-bottom:20px;
+
+}
+
+.subject-buttons{
+
+display:flex;
+
+gap:15px;
+
+margin-bottom:25px;
+
+}
+
+.subject-btn{
+
+padding:12px 20px;
+
+border:none;
+
+border-radius:10px;
+
+background:white;
+
+cursor:pointer;
+
+font-weight:bold;
+
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.subject-btn.active{
+
+background:#003B5C;
+
+color:white;
+
+}  
   
 </style>
 
@@ -144,15 +198,43 @@ color:#003B5C;
 
 <body>
 
-<h1>Browse by Long-Term EHCP Target</h1>
+<a href="index.html" class="back">
+← Back to Homepage
+</a>
+
+<h1>Long-Term EHCP Target Finder</h1>
+
+<div class="subject-buttons">
+
+<button id="subjectBtnNumber"
+class="subject-btn active"
+onclick="showSubject('Number')">
+
+Number
+
+</button>
+
+<button id="subjectBtnSSM"
+class="subject-btn"
+onclick="showSubject('SSM')">
+
+Shape, Space & Measure
+
+</button>
+
+</div>
 
 <div id="content"></div>
 
+
 <script>
 
+let allData = [];
+let currentSubject = "Number";
+  
 async function buildPage(){
 
-const data =
+allData =
 await loadCurriculum();
 
 const params =
@@ -166,7 +248,7 @@ let html = "";
 if(selected){
 
 let matching =
-data.filter(item =>
+allData.filter(item =>
 item['Long term EHCP Target'] === selected
 );
 
@@ -260,82 +342,134 @@ View full target information
 }
 else{
 
-const subjects = [...new Set(
-data.map(x => x.Subject)
-)];
+buildOverview("Number");
 
-subjects.forEach(subject => {
+}
 
-html += `
-<div class="subject-heading">
-${subject}
-</div>
-`;
+function buildOverview(subject){
 
-const subjectRows =
-data.filter(x => x.Subject === subject);
+let html = '';
 
-const pathways = [...new Set(
-subjectRows.map(x => x.Pathway)
+let rows =
+allData.filter(
+x => x.Subject === subject
+);
+
+let pathways =
+[...new Set(
+rows.map(x => x.Pathway)
 )];
 
 pathways.forEach(pathway => {
 
 html += `
-<div class="pathway-heading">
-${pathway}
-</div>
+<h2>${pathway}</h2>
 `;
 
-const pathwayRows =
-subjectRows.filter(x => x.Pathway === pathway);
+let pathwayRows =
+rows.filter(x =>
+x.Pathway === pathway
+);
 
-const strands = [...new Set(
-pathwayRows.map(x => x.Strand)
+let stages =
+[...new Set(
+pathwayRows.map(
+x => Number(x.Level))
+)]
+.sort((a,b)=>a-b);
+
+stages.forEach(stage => {
+
+html += `
+<div class="card">
+
+<h3>
+Stage ${stage}
+</h3>
+`;
+
+let stageRows =
+pathwayRows.filter(
+x => Number(x.Level) === stage
+);
+
+let strands =
+[...new Set(
+stageRows.map(x => x.Strand)
 )];
 
 strands.forEach(strand => {
 
-const strandRows =
-pathwayRows.filter(x => x.Strand === strand);
+html += `
+<h4>${strand}</h4>
+`;
 
-const minStage = Math.min(
-...strandRows.map(x => Number(x.Level))
+let targets =
+[...new Set(
+stageRows
+.filter(x=>x.Strand===strand)
+.map(
+x=>x['Long term EHCP Target']
+)
+)];
+
+targets.forEach(target=>{
+
+html += `
+
+<details>
+
+<summary>
+${target}
+</summary>
+
+`;
+
+let matchingRows =
+allData.filter(x =>
+x['Long term EHCP Target'] === target
 );
 
-const maxStage = Math.max(
-...strandRows.map(x => Number(x.Level))
+let minStage =
+Math.min(
+...matchingRows.map(
+x=>Number(x.Level))
+);
+
+let maxStage =
+Math.max(
+...matchingRows.map(
+x=>Number(x.Level))
 );
 
 html += `
 
-<div class="card">
+<p>
 
-<h3>${strand}</h3>
+<strong>Learning Area:</strong>
+
+${matchingRows[0]['Learning Area']}
+
+</p>
 
 <p>
 
 <strong>Stage Range:</strong>
 
-${minStage}-${maxStage}
-
-<br>
-
-<strong>Learning Area:</strong>
-
-${strandRows[0]['Learning Area'] || ''}
+${minStage}
+-
+${maxStage}
 
 </p>
 
 `;
 
-const targets = [...new Set(
-strandRows.map(
-x => x['Long term EHCP Target']
-)
-)];
-
-targets.forEach(target => {
+matchingRows
+.sort((a,b)=>
+Number(a.Level)
+-
+Number(b.Level))
+.forEach(row=>{
 
 html += `
 
@@ -343,15 +477,18 @@ html += `
 
 <summary>
 
-${target}
+Stage ${row.Level}
+
+-
+${row.Target}
 
 </summary>
 
 <p>
 
-<a href="?target=${encodeURIComponent(target)}">
+<a href="view.html?strand=${encodeURIComponent(row.Strand)}">
 
-Open Long-Term Target
+View full target information
 
 </a>
 
@@ -364,20 +501,49 @@ Open Long-Term Target
 });
 
 html += `
-
-</div>
-
+</details>
 `;
 
 });
 
 });
 
+html += `
+</div>
+`;
+
 });
+
+});
+
+document
+.getElementById('content')
+.innerHTML = html;
 
 }
 
-document.getElementById("content").innerHTML = html;
+}
+
+function showSubject(subject){
+
+currentSubject = subject;
+
+document
+.querySelectorAll('.subject-btn')
+.forEach(btn =>
+btn.classList.remove('active'));
+
+document
+.getElementById(
+subject === 'Number'
+?
+'subjectBtnNumber'
+:
+'subjectBtnSSM'
+)
+.classList.add('active');
+
+buildOverview(subject);
 
 }
 

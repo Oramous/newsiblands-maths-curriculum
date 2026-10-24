@@ -419,140 +419,6 @@ buildOverview("Number");
 
 }
 
-function buildOverview(subject){
-
-let html = '';
-
-let rows =
-allData.filter(
-x => x.Subject === subject
-);
-
-let pathways =
-[...new Set(
-rows.map(x => x.Pathway)
-)];
-
-pathways.forEach(pathway => {
-
-html += `
-<h2>${pathway}</h2>
-`;
-
-let pathwayRows =
-rows.filter(x =>
-x.Pathway === pathway
-);
-
-let stages =
-[...new Set(
-pathwayRows.map(
-x => Number(x.Level))
-)]
-.sort((a,b)=>a-b);
-
-stages.forEach(stage => {
-
-html += `
-<div class="card">
-
-<h3>
-Stage ${stage}
-</h3>
-`;
-
-let stageRows =
-pathwayRows.filter(
-x => Number(x.Level) === stage
-);
-
-let strands =
-[...new Set(
-stageRows.map(x => x.Strand)
-)];
-
-strands.forEach(strand => {
-
-html += `
-<h4>${strand}</h4>
-`;
-
-let targets =
-[...new Set(
-stageRows
-.filter(x=>x.Strand===strand)
-.map(
-x=>x['Long term EHCP Target']
-)
-)];
-
-targets.forEach(target=>{
-
-html += `
-
-<details>
-
-<summary>
-${target}
-</summary>
-
-`;
-
-let matchingRows =
-allData.filter(x =>
-x['Long term EHCP Target'] === target
-);
-
-let minStage =
-Math.min(
-...matchingRows.map(
-x=>Number(x.Level))
-);
-
-let maxStage =
-Math.max(
-...matchingRows.map(
-x=>Number(x.Level))
-);
-
-html += `
-
-<p>
-
-<strong>Learning Area:</strong>
-
-${matchingRows[0]['Learning Area']}
-
-</p>
-
-<p>
-
-<strong>Stage Range:</strong>
-
-${minStage}
--
-${maxStage}
-
-</p>
-
-`;
-
-matchingRows
-.sort((a,b)=>
-Number(a.Level)
--
-Number(b.Level))
-.forEach(row=>{
-
-let pathwayClass = 'achievement';
-
-if(
-row.Pathway &&
-row.Pathway.toLowerCase().includes('belong')
-){
-    pathwayClass = 'belonging';
-}
-
 if(
 row.Pathway &&
 row.Pathway.toLowerCase().includes('celebr')
@@ -708,6 +574,140 @@ document
 
 }
 
+function buildOverview(subject){
+
+let html = '';
+
+let rows =
+allData.filter(
+x => x.Subject === subject
+);
+
+let pathways =
+[...new Set(
+rows.map(x => x.Pathway)
+)];
+
+pathways.forEach(pathway => {
+
+html += `
+<h2>${pathway}</h2>
+`;
+
+let pathwayRows =
+rows.filter(x =>
+x.Pathway === pathway
+);
+
+let stages =
+[...new Set(
+pathwayRows.map(
+x => Number(x.Level))
+)]
+.sort((a,b)=>a-b);
+
+stages.forEach(stage => {
+
+html += `
+<div class="card">
+
+<h3>
+Stage ${stage}
+</h3>
+`;
+
+let stageRows =
+pathwayRows.filter(
+x => Number(x.Level) === stage
+);
+
+let strands =
+[...new Set(
+stageRows.map(x => x.Strand)
+)];
+
+strands.forEach(strand => {
+
+html += `
+<h4>${strand}</h4>
+`;
+
+let targets =
+[...new Set(
+stageRows
+.filter(x=>x.Strand===strand)
+.map(
+x=>x['Long term EHCP Target']
+)
+)];
+
+targets.forEach(target=>{
+
+html += `
+
+<details>
+
+<summary>
+${target}
+</summary>
+
+`;
+
+let matchingRows =
+allData.filter(x =>
+x['Long term EHCP Target'] === target
+);
+
+let minStage =
+Math.min(
+...matchingRows.map(
+x=>Number(x.Level))
+);
+
+let maxStage =
+Math.max(
+...matchingRows.map(
+x=>Number(x.Level))
+);
+
+html += `
+
+<p>
+
+<strong>Learning Area:</strong>
+
+${matchingRows[0]['Learning Area']}
+
+</p>
+
+<p>
+
+<strong>Stage Range:</strong>
+
+${minStage}
+-
+${maxStage}
+
+</p>
+
+`;
+
+matchingRows
+.sort((a,b)=>
+Number(a.Level)
+-
+Number(b.Level))
+.forEach(row=>{
+
+let pathwayClass = 'achievement';
+
+if(
+row.Pathway &&
+row.Pathway.toLowerCase().includes('belong')
+){
+    pathwayClass = 'belonging';
+}
+    
 function showSubject(subject){
 
 currentSubject = subject;

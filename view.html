@@ -231,12 +231,91 @@ background:#20C997;
 .nextsteps-badge{
 background:#8C564B;
 }
+
+.sidebar{
+    width:260px;
+    background:#003B5C;
+    color:white;
+    position:fixed;
+    height:100%;
+    overflow-y:auto;
+    padding:20px;
+}
+
+.logo{
+    text-align:center;
+}
+
+.logo img{
+    width:120px;
+    margin-bottom:10px;
+}
+
+.sidebar h2{
+    text-align:center;
+}
+
+.sidebar p{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    color:white;
+    text-decoration:none;
+    display:block;
+    padding:12px;
+    border-radius:8px;
+}
+
+.sidebar a:hover{
+    background:rgba(255,255,255,0.15);
+}
+
+.main{
+    margin-left:260px;
+    padding:30px;
+}
   
 </style>
 
 </head>
 
 <body>
+
+<div class="sidebar">
+
+<div class="logo">
+
+<img src="logo.png" alt="School Logo">
+
+<h2>New Siblands</h2>
+
+<p>Mathematics Curriculum</p>
+
+</div>
+
+<a href="index.html">🏠 Home</a>
+
+<a href="Curriculum.html">
+📚 Curriculum Documents
+</a>
+
+<a href="ehcp-long.html">
+🧩 EHCP Target Finder
+</a>
+
+<a href="Assessment.html">
+📊 Assessment
+</a>
+
+<a href="WhiteRose.html">
+📖 White Rose Links
+</a>
+
+</div>
+
+<div class="main">
 
 <a href="index.html" class="back">
 ← Back to Homepage
@@ -845,6 +924,8 @@ item.style.display='none';
   
 </script>
 
+</div>  
+  
 </body>
 
 </html>

@@ -1,1 +1,180 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Long-Term EHCP Targets</title>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="data.js"></script>
+
+<style>
+
+body{
+font-family:Segoe UI,sans-serif;
+background:#F5F7FA;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-bottom:15px;
+border-radius:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+h1,h2,h3{
+color:#003B5C;
+}
+
+details{
+margin-top:10px;
+}
+
+summary{
+cursor:pointer;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Browse by Long-Term EHCP Target</h1>
+
+<div id="content"></div>
+
+<script>
+
+async function buildPage(){
+
+const data =
+await loadCurriculum();
+
+const params =
+new URLSearchParams(window.location.search);
+
+const selected =
+params.get("target");
+
+let html = "";
+
+if(selected){
+
+let matching =
+data.filter(item =>
+item['Long term EHCP Target'] === selected
+);
+
+let first = matching[0];
+
+html += `
+<div class="card">
+
+<h2>${selected}</h2>
+
+<p><strong>Subject:</strong> ${first.Subject}</p>
+
+<p><strong>Strand:</strong> ${first.Strand}</p>
+
+<p><strong>Learning Area:</strong> ${first['Learning Area']}</p>
+
+<p>
+<strong>Stage Range:</strong>
+
+${Math.min(...matching.map(x=>Number(x.Level)))}
+-
+${Math.max(...matching.map(x=>Number(x.Level)))}
+
+</p>
+
+</div>
+`;
+
+matching
+.sort((a,b)=>Number(a.Level)-Number(b.Level))
+.forEach(item=>{
+
+html += `
+
+<div class="card">
+
+<details>
+
+<summary>
+
+Stage ${item.Level}
+
+-
+
+${item.Target}
+
+</summary>
+
+<p>
+
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
+
+View target information
+
+</a>
+
+</p>
+
+</details>
+
+</div>
+
+`;
+
+});
+
+}
+else{
+
+const targets =
+[...new Set(
+
+data.map(
+x => x['Long term EHCP Target']
+)
+
+)].sort();
+
+targets.forEach(target=>{
+
+html += `
+
+<div class="card">
+
+<a href="?target=${encodeURIComponent(target)}">
+
+${target}
+
+</a>
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+buildPage();
+
+</script>
+
+</body>
+
+</html>

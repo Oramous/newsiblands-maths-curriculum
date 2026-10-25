@@ -565,8 +565,11 @@ if(focus){
 
 filtered = filtered.filter(item =>
 item['Focus Area'] &&
-item['Focus Area'].toLowerCase() ===
-focus.toLowerCase()
+item['Focus Area']
+.toLowerCase()
+.split('|')
+.map(x => x.trim())
+.includes(focus.toLowerCase())
 );
 
 }

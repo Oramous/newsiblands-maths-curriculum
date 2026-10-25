@@ -356,6 +356,20 @@ onkeyup="searchTargets()">
 
 <script>
 
+const focusNames = {
+
+    "Size" : "Length & Height",
+
+    "Weight" : "Weight & Mass",
+
+    "Capacity" : "Capacity",
+
+    "Time" : "Time",
+
+    "Money" : "Money"
+
+};
+    
 async function buildPage(){
 
 const params =
@@ -379,7 +393,13 @@ params.get('focus');
 if(strand && focus){
 
 document.getElementById('strandTitle').innerText =
-strand + ' - ' + focus;
+strand + ' - ' +
+
+(
+focusNames[focus]
+||
+focus
+);
 
 }
 else if(strand && pathway){
@@ -449,7 +469,9 @@ focus
 Focus Area
 </div>
 
-<p>${focus}</p>
+<p>
+${focusNames[focus] || focus}
+</p>
 `
 :
 ''
@@ -564,12 +586,15 @@ item.Pathway.toLowerCase()
 if(focus){
 
 filtered = filtered.filter(item =>
-${focusNames[item['Focus area']] || item['Focus area']} &&
-${focusNames[item['Focus area']] || item['Focus area']}
+
+item['Focus area'] &&
+
+item['Focus area']
 .toLowerCase()
 .split('|')
 .map(x => x.trim())
 .includes(focus.toLowerCase())
+
 );
 
 }
@@ -1121,21 +1146,7 @@ Stage ${level}
 container.innerHTML = html;
 
 }
-
-const focusNames = {
-
-    "Size" : "Length & Height",
-
-    "Weight" : "Weight & Mass",
-
-    "Capacity" : "Capacity",
-
-    "Time" : "Time",
-
-    "Money" : "Money"
-
-};
-    
+ 
 buildPage();
 
 function searchTargets(){

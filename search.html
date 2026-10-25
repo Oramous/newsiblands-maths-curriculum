@@ -284,75 +284,191 @@ function runSearch(){
 
         html += `
 
-        <div class="result">
+<div class="result">
 
-            <h3>${item.Target}</h3>
+<details>
 
-            <p>
-                <strong>Subject:</strong>
-                ${item.Subject}
-            </p>
+<summary>
 
-            <p>
-                <strong>Strand:</strong>
-                ${item.Strand}
-            </p>
+${item.Target}
 
-            <p>
-                <strong>Stage:</strong>
-                ${item.Level}
-            </p>
+</summary>
 
-            ${
-            item['Focus area']
-            ?
-            `
-            <p>
-                <strong>Focus Area:</strong>
-                ${focusNames[item['Focus area']] || item['Focus area']}
-            </p>
-            `
-            :
-            ''
-            }
+<p>
+<strong>Subject:</strong>
+${item.Subject}
+</p>
 
-            ${
-            item['Learning Area']
-            ?
-            `
-            <p>
-                <strong>Learning Area:</strong>
-                ${item['Learning Area']}
-            </p>
-            `
-            :
-            ''
-            }
+<p>
+<strong>Strand:</strong>
+${item.Strand}
+</p>
 
-            ${
-            item['Long term EHCP Target']
-            ?
-            `
-            <p>
-                <strong>Long-Term EHCP Target:</strong>
-                ${item['Long term EHCP Target']}
-            </p>
-            `
-            :
-            ''
-            }
+<p>
+<strong>Stage:</strong>
+${item.Level}
+</p>
 
-            <a
-                class="open-link"
-                href="view.html?strand=${encodeURIComponent(item.Strand)}#target-${item.ID}">
+${
+item['Focus area']
+?
+`
+<p>
+<strong>Focus Area:</strong>
+${item['Focus area']}
+</p>
+`
+:
+''
+}
 
-                Open Target
+${
+item['Learning Area']
+?
+`
+<p>
+<strong>Learning Area:</strong>
+${item['Learning Area']}
+</p>
+`
+:
+''
+}
 
-            </a>
+${
+item['Long term EHCP Target']
+?
+`
+<p>
+<strong>Long-Term EHCP Target:</strong>
+${item['Long term EHCP Target']}
+</p>
+`
+:
+''
+}
 
-        </div>
+${
+item.Breakdown
+?
+`
+<p>
 
-        `;
+<strong>Target Breakdown</strong>
+
+<br>
+
+${item.Breakdown}
+
+</p>
+`
+:
+''
+}
+
+${
+item.Emerging
+?
+`
+<p>
+
+<strong>Emerging</strong>
+
+<br>
+
+${item.Emerging}
+
+</p>
+`
+:
+''
+}
+
+${
+item.Developing
+?
+`
+<p>
+
+<strong>Developing</strong>
+
+<br>
+
+${item.Developing}
+
+</p>
+`
+:
+''
+}
+
+${
+item.Secure
+?
+`
+<p>
+
+<strong>Secure</strong>
+
+<br>
+
+${item.Secure}
+
+</p>
+`
+:
+''
+}
+
+${
+item.Activities
+?
+`
+<p>
+
+<strong>Activities</strong>
+
+<br>
+
+${item.Activities}
+
+</p>
+`
+:
+''
+}
+
+${
+item.Vocab
+?
+`
+<p>
+
+<strong>Vocabulary</strong>
+
+<br>
+
+${item.Vocab}
+
+</p>
+`
+:
+''
+}
+
+<a
+class="open-link"
+href="view.html?strand=${encodeURIComponent(item.Strand)}#target-${item.ID}">
+
+Open in Curriculum Page
+
+</a>
+
+</details>
+
+</div>
+
+`;
 
     });
 

@@ -727,7 +727,7 @@ if(item.Pathway.toLowerCase().includes('celebr')){
 
 html += `
 
-<details>
+<details id="target-${item.ID}">
 
 <summary>
 ${item.Target}
@@ -1148,6 +1148,34 @@ container.innerHTML = html;
 }
  
 buildPage();
+
+window.addEventListener('load', () => {
+
+const hash = window.location.hash;
+
+if(hash){
+
+setTimeout(() => {
+
+const target =
+document.querySelector(hash);
+
+if(target){
+
+target.open = true;
+
+target.scrollIntoView({
+behavior:'smooth',
+block:'start'
+});
+
+}
+
+},500);
+
+}
+
+});
 
 function searchTargets(){
 

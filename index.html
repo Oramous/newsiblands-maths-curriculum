@@ -856,7 +856,7 @@ item['Focus area']
 
 <a href="view.html?strand=${encodeURIComponent(item.Strand)}&focus=${encodeURIComponent(item['Focus area'])}">
 
-${item['Focus area']}
+${focusNames[item['Focus area']] || item['Focus area']}
 
 </a>
 `

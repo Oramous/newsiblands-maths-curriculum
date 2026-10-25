@@ -374,28 +374,23 @@ color:#666;
 
 <script>
 
-function searchCurriculum() {
+function goToSearch(){
 
-let input =
-document.getElementById("searchInput")
+const search =
+document.getElementById('searchInput')
 .value
-.toLowerCase();
+.trim();
 
-let searchable =
-document.querySelectorAll(".searchable");
+if(search){
 
-searchable.forEach(function(item){
-
-if(item.innerText.toLowerCase().includes(input)){
-item.style.display="";
-}
-else{
-item.style.display="none";
-}
-
-});
+window.location.href =
+'search.html?q=' +
+encodeURIComponent(search);
 
 }
+
+}
+
 
 </script>
 
@@ -449,12 +444,16 @@ A curriculum framework connecting progression,
 assessment, EHCP outcomes and teaching resources.
 </p>
 
+<form onsubmit="goToSearch(); return false;">
+
 <input
 id="searchInput"
 class="search-box"
 type="text"
-placeholder="Search the curriculum..."
-onkeyup="searchCurriculum()">
+placeholder="Search targets, vocabulary, activities, strands..."
+>
+
+</form>
 
 </header>
 

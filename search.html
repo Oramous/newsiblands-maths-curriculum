@@ -9,11 +9,8 @@
 <title>Curriculum Search | New Sibs Maths</title>
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
-
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -39,8 +36,6 @@ font-family:Segoe UI, Arial, sans-serif;
 body{
 background:var(--light);
 }
-
-/* SIDEBAR */
 
 .sidebar{
 width:260px;
@@ -76,3 +71,82 @@ text-decoration:none;
 display:block;
 padding:12px;
 border-radius:8px;
+}
+
+.sidebar a:hover{
+background:rgba(255,255,255,0.15);
+}
+
+.main{
+margin-left:260px;
+padding:30px;
+}
+
+h1{
+color:#003B5C;
+margin-bottom:20px;
+}
+
+.search-box{
+width:100%;
+padding:15px;
+border-radius:10px;
+border:2px solid #ddd;
+margin-bottom:25px;
+font-size:16px;
+}
+
+.result{
+background:white;
+padding:20px;
+margin-bottom:15px;
+border-radius:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.result h3{
+color:#003B5C;
+margin-bottom:10px;
+}
+
+.result p{
+margin-bottom:8px;
+}
+
+.open-link{
+display:inline-block;
+padding:8px 12px;
+background:#0077B6;
+color:white;
+text-decoration:none;
+border-radius:8px;
+margin-top:10px;
+}
+
+.open-link:hover{
+background:#005d94;
+}
+
+@media(max-width:1000px){
+
+.sidebar{
+width:100%;
+position:relative;
+height:auto;
+}
+
+.main{
+margin-left:0;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<

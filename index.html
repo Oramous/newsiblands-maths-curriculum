@@ -834,8 +834,6 @@ pathwayTargets.forEach(item => {
 
 html += `
 
-html += `
-
 <div class="cycle-item">
 
 <strong>${item.Pathway}</strong>
@@ -853,7 +851,7 @@ ${item['Focus area']
 `
 <br>
 
-<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}&focus=${encodeURIComponent(item['Focus area'])}">
 
 ${item['Focus area']}
 
@@ -866,6 +864,8 @@ ${item['Focus area']}
 </div>
 
 `;
+
+});
     
 });
 

@@ -844,11 +844,14 @@ ${item.Subject}
 
 <br>
 
-${item.Strand}
-
-${item['Focus area']
+${
+item['Focus area']
 ?
 `
+<br>
+
+<strong>${item.Strand}</strong>
+
 <br>
 
 <a href="view.html?strand=${encodeURIComponent(item.Strand)}&focus=${encodeURIComponent(item['Focus area'])}">
@@ -858,7 +861,15 @@ ${item['Focus area']}
 </a>
 `
 :
-''
+`
+<br>
+
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
+
+${item.Strand}
+
+</a>
+`
 }
 
 </div>

@@ -564,8 +564,8 @@ item.Pathway.toLowerCase()
 if(focus){
 
 filtered = filtered.filter(item =>
-item['Focus Area'] &&
-item['Focus Area']
+${focusNames[item['Focus area']] || item['Focus area']} &&
+${focusNames[item['Focus area']] || item['Focus area']}
 .toLowerCase()
 .split('|')
 .map(x => x.trim())
@@ -1122,6 +1122,20 @@ container.innerHTML = html;
 
 }
 
+const focusNames = {
+
+    "Size" : "Length & Height",
+
+    "Weight" : "Weight & Mass",
+
+    "Capacity" : "Capacity",
+
+    "Time" : "Time",
+
+    "Money" : "Money"
+
+};
+    
 buildPage();
 
 function searchTargets(){

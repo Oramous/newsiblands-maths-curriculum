@@ -373,10 +373,19 @@ params.get('term');
 const pathway =
 params.get('pathway');
 
+const focus =
+params.get('focus');
+    
 if(strand && pathway){
 
 document.getElementById('strandTitle').innerText =
 strand + ' (' + pathway + ')';
+
+}
+else if(strand && focus){
+
+document.getElementById('strandTitle').innerText =
+strand + ' - ' + focus;
 
 }
 else if(strand){
@@ -538,6 +547,16 @@ item.Pathway.toLowerCase()
 
 }
 
+if(focus){
+
+filtered = filtered.filter(item =>
+item['Focus Area'] &&
+item['Focus Area'].toLowerCase() ===
+focus.toLowerCase()
+);
+
+}
+    
 if(pathway && !strand){
 
 let strands = [...new Set(

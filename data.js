@@ -27,3 +27,21 @@ async function loadStrandInfo(){
     }).data;
 
 }
+
+const CURRICULUM_CYCLE_URL =
+'https://docs.google.com/spreadsheets/d/e/2PACX-1vQCzR8dnbuegG8eX8rgndIfmfcVKOF-6kex3g0_1OakS-PwSWQzfSPdB-8T35kMROE0X-VMIv0JhHPQ/pub?output=csv';
+
+async function loadCurriculumCycle(){
+
+    const response =
+    await fetch(CURRICULUM_CYCLE_URL);
+
+    const csvText =
+    await response.text();
+
+    return Papa.parse(csvText,{
+        header:true,
+        skipEmptyLines:true
+    }).data;
+
+}

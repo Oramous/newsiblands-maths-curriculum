@@ -741,16 +741,16 @@ New Siblands School Mathematics Curriculum
 
 <script>
 
-let curriculumData = [];
+let cycleData = [];
 
 async function buildCycles(){
 
-curriculumData = await loadCurriculum();
+cycleData = await loadCurriculumCycle();
 
 showCycle(1);
 
 }
-
+    
 function showCycle(cycle){
 
 document
@@ -785,7 +785,7 @@ let html = `
 for(let term=1; term<=6; term++){
 
 let targets =
-curriculumData.filter(item =>
+cycleData.filter(item =>
 Number(item.Cycle) === cycle &&
 Number(item.Term) === term
 );
@@ -834,20 +834,39 @@ pathwayTargets.forEach(item => {
 
 html += `
 
+html += `
+
 <div class="cycle-item">
 
-${item.Subject} -
+<strong>${item.Pathway}</strong>
 
-<a href="view.html?strand=${encodeURIComponent(item.Strand)}&pathway=${encodeURIComponent(item.Pathway)}">
+<br>
+
+${item.Subject}
+
+<br>
 
 ${item.Strand}
 
+${item['Focus area']
+?
+`
+<br>
+
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
+
+${item['Focus area']}
+
 </a>
+`
+:
+''
+}
 
 </div>
 
 `;
-
+    
 });
 
 }

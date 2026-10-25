@@ -261,12 +261,19 @@ color:#0077B6;
 .cycle-pathway-heading{
 
 display:inline-block;
-padding:4px 10px;
+
+padding:6px 12px;
+
 border-radius:20px;
-color:white;
+
 font-size:12px;
 font-weight:bold;
+
 margin-bottom:8px;
+
+color:white;
+
+}
 
 }
 
@@ -838,8 +845,22 @@ x.Pathway.toLowerCase()
 
 if(pathwayTargets.length > 0){
 
+let pathwayClass = '';
+
+if(pathway === 'Belonging'){
+    pathwayClass = 'belonging-text';
+}
+
+if(pathway === 'Achievement'){
+    pathwayClass = 'achievement-text';
+}
+
+if(pathway === 'Celebration'){
+    pathwayClass = 'celebration-text';
+}
+
 html += `
-<div class="cycle-pathway-heading">
+<div class="cycle-pathway-heading ${pathwayClass}">
 ${pathway}
 </div>
 `;

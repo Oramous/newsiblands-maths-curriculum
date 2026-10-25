@@ -372,20 +372,20 @@ params.get('term');
   
 const pathway =
 params.get('pathway');
-
+  
 const focus =
 params.get('focus');
     
-if(strand && pathway){
-
-document.getElementById('strandTitle').innerText =
-strand + ' (' + pathway + ')';
-
-}
-else if(strand && focus){
+if(strand && focus){
 
 document.getElementById('strandTitle').innerText =
 strand + ' - ' + focus;
+
+}
+else if(strand && pathway){
+
+document.getElementById('strandTitle').innerText =
+strand + ' (' + pathway + ')';
 
 }
 else if(strand){
@@ -440,6 +440,20 @@ if(strand){
         document.getElementById('strandIntro').innerHTML = `
 
 <div class="intro-box">
+
+${
+focus
+?
+`
+<div class="section-badge breakdown-badge">
+Focus Area
+</div>
+
+<p>${focus}</p>
+`
+:
+''
+}
 
     <h2>Introduction</h2>
 

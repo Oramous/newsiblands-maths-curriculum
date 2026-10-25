@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Curriculum Search | New Sibs Maths</title>
+
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="data.js"></script>
+
+<style>
+
+:root{
+--navy:#003B5C;
+--light:#F5F7FA;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+background:var(--light);
+}
+
+.sidebar{
+width:260px;
+background:#003B5C;
+color:white;
+position:fixed;
+height:100%;
+padding:20px;
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+}
+
+.sidebar a:hover{
+background:rgba(255,255,255,.15);
+}
+
+.main{
+margin-left:260px;
+padding:30px;
+}
+
+.search-box{
+width:100%;
+padding:15px;
+border-radius:10px;
+border:2px solid #ddd;
+margin-bottom:25px;
+}
+
+.result{
+background:white;
+padding:20px;
+margin-bottom:15px;
+border-radius:15px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.result h3{
+color:#003B5C;
+margin-bottom:10px;
+}
+
+.result a{
+color:#0077B6;
+text-decoration:none;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<a href="index.html">🏠 Home</a>
+
+<a href="Curriculum.html">
+📚 Curriculum Documents
+</a>
+
+<a href="ehcp-long.html">
+🧩 EHCP Target Finder
+</a>
+
+</div>
+
+<div class="main">
+
+<h1>Curriculum Search</h1>
+
+<input
+type="text"
+id="searchBox"
+class="search-box"
+placeholder="Search curriculum..."
+onkeyup="runSearch()">
+
+<div id="results"></div>
+
+</div>
+
+<script>
+
+let allData = [];
+
+async function initialise(){
+
+allData =
+await loadCurriculum();
+
+const params =
+new URLSearchParams(window.location.search);
+
+const q =
+params.get("q");
+
+if(q){
+
+document.getElementById("searchBox").value =
+q;
+
+runSearch();
+
+}
+
+}
+
+function runSearch(){
+
+const search =
+document.getElementById("searchBox")
+.value
+.toLowerCase();
+
+let html = "";
+
+const results =
+allData.filter(item => {
+
+let text = [
+
+item.Target,
+item.Strand,
+item['Long term EHCP Target'],
+item['Learning Area'],
+item.Breakdown,
+item.Activities,
+item.Vocab
+
+].join(" ").toLowerCase();
+
+return text.includes(search);
+
+});
+
+results.forEach(item=>{
+
+html += `
+
+<div class="result">
+
+<h3>
+
+${item.Target}
+
+</h3>
+
+<p>
+
+<strong>Strand:</strong>
+
+${item.Strand}
+
+</p>
+
+<p>
+
+<strong>Stage:</strong>
+
+${item.Level}
+
+</p>
+
+<p>
+
+<strong>Learning Area:</strong>
+
+${item['Learning Area']}
+
+</p>
+
+<p>
+
+<strong>Long-Term EHCP Target:</strong>
+
+${item['Long term EHCP Target']}
+
+</p>
+
+<p>
+
+<a href="view.html?strand=${encodeURIComponent(item.Strand)}">
+
+Open Curriculum Area
+
+</a>
+
+</p>
+
+</div>
+
+`;
+
+});
+
+if(results.length === 0){
+
+html = `
+<div class="result">
+
+No matches found.
+
+</div>
+`;
+
+}
+
+document
+.getElementById("results")
+.innerHTML = html;
+
+}
+
+initialise();
+
+</script>
+
+</body>
+
+</html>

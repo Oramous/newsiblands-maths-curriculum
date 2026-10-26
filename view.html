@@ -294,7 +294,41 @@ margin-left:260px;
 padding:30px;
 width:calc(100% - 260px);
 }
-  
+
+.foundation-banner{
+
+background:#5CB85C;
+color:white;
+
+padding:15px;
+
+border-radius:10px;
+
+font-size:22px;
+font-weight:bold;
+
+margin-top:20px;
+margin-bottom:20px;
+
+}
+
+.achievement-banner{
+
+background:#0077B6;
+color:white;
+
+padding:15px;
+
+border-radius:10px;
+
+font-size:22px;
+font-weight:bold;
+
+margin-top:20px;
+margin-bottom:20px;
+
+}  
+    
 </style>
 
 </head>
@@ -611,9 +645,17 @@ let filtered = data;
 if(strand){
 
 filtered = filtered.filter(item =>
+
 item.Strand &&
-item.Strand.toLowerCase() ===
+
+item.Strand
+.toLowerCase()
+.split('|')
+.map(x => x.trim())
+.includes(
 strand.toLowerCase()
+)
+
 );
 
 }
@@ -750,6 +792,30 @@ if(levelTargets.length === 0){
     return;
 }
 
+if(level === 1){
+
+html += `
+<div class="foundation-banner">
+
+🟢 Belonging Foundations
+
+</div>
+`;
+
+}
+
+if(level === 4){
+
+html += `
+<div class="achievement-banner">
+
+🔵 Achievement Curriculum
+
+</div>
+`;
+
+}
+    
 html += `
 <div class="level" id="stage${level}">
 

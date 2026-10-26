@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Target Finder</title>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="data.js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    color:#0066cc;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    font-size:16px;
+}
+
+.card{
+    background:#f7f7f7;
+    border-left:6px solid #0066cc;
+    padding:15px;
+    margin-top:15px;
+    border-radius:8px;
+}
+
+.label{
+    font-weight:bold;
+    color:#0066cc;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Target Finder</h1>
+
+<p>Select a strand and current objective to find suggested next steps.</p>
+
+<select id="strandSelect">
+<option value="">Select Strand</option>
+</select>
+
+<select id="targetSelect">
+<option value="">Select Current Objective</option>
+</select>
+
+<div id="results"></div>
+
+</div>
+
+<script>
+
+let curriculumData = [];
+
+async function init(){
+
+    curriculumData = await loadCurriculum();
+
+    const strandSelect =
+        document.getElementById("strandSelect");
+
+    const strands =
+        [...new Set(
+            curriculumData
+            .map(r => r.Strand)
+            .filter(Boolean)
+        )].sort();
+
+    strands.forEach(strand => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = strand;
+        option.textContent = strand;
+
+        strandSelect.appendChild(option);
+
+    });
+
+}
+
+document
+.getElementById("strandSelect")
+.addEventListener("change", function(){
+
+    const strand = this.value;
+
+    const targetSelect =
+        document.getElementById("targetSelect");
+
+    targetSelect.innerHTML =
+        '<option value="">Select Current Objective</option>';
+
+    const targets =
+        curriculumData.filter(
+            r => r.Strand === strand
+        );
+
+    targets.forEach(row => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = row.ID;
+        option.textContent =
+            `Level ${row.Level} - ${row.Target}`;
+
+        targetSelect.appendChild(option);
+
+    });
+
+});
+
+document
+.getElementById("targetSelect")
+.addEventListener("change", function(){
+
+    const selected =
+        curriculumData.find(
+            r => r.ID === this.value
+        );
+
+    if(!selected) return;
+
+    document.getElementById("results").innerHTML = `
+
+    <div class="card">
+
+        <p>
+            <span class="label">Strand:</span><br>
+            ${selected.Strand}
+        </p>
+
+        <p>
+            <span class="label">Current Objective:</span><br>
+            ${selected.Target}
+        </p>
+
+        <p>
+            <span class="label">Level:</span><br>
+            ${selected.Level}
+        </p>
+
+        <p>
+            <span class="label">Long-Term EHCP Target:</span><br>
+            ${selected["Long term EHCP Target"] || "Not specified"}
+        </p>
+
+        <p>
+            <span class="label">Next Step Within Level:</span><br>
+            ${selected["Next Steps within level"] || "None specified"}
+        </p>
+
+        <p>
+            <span class="label">Next Step Level Up:</span><br>
+            ${selected["Next steps level up"] || "None specified"}
+        </p>
+
+        <p>
+            <span class="label">Suggested Activities:</span><br>
+            ${selected.Activities || "None specified"}
+        </p>
+
+    </div>
+
+    `;
+
+});
+
+init();
+
+</script>
+
+</body>
+</html>

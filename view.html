@@ -328,6 +328,23 @@ margin-top:20px;
 margin-bottom:20px;
 
 }  
+
+.celebration-banner{
+
+background:#7B5CB8;
+color:white;
+
+padding:15px;
+
+border-radius:10px;
+
+font-size:22px;
+font-weight:bold;
+
+margin-top:20px;
+margin-bottom:20px;
+
+}
     
 </style>
 
@@ -781,6 +798,15 @@ const levels = [...new Set(
 filtered.map(item => Number(item.Level))
 )].sort((a,b)=>a-b);
 
+const hasBelonging =
+levels.some(level => level <= 3);
+
+const hasAchievement =
+levels.some(level => level >= 4 && level <= 7);
+
+const hasCelebration =
+levels.some(level => level >= 8);
+    
 levels.forEach(level => {
 
 let levelTargets =

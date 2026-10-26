@@ -347,6 +347,8 @@ async function initialisePage() {
 
     setupTargetSearch();
 
+    loadTargetFromUrl();
+
 }
 
 function setupTargetSearch(){
@@ -755,6 +757,28 @@ window.open(
 
 }
 
+function loadTargetFromUrl(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const target =
+        params.get("target");
+
+    if(!target) return;
+
+    document.getElementById(
+        "currentTarget"
+    ).value = target;
+
+    document.getElementById(
+        "targetSearch"
+    ).value = target;
+
+}
+    
 initialisePage();
 
 </script>

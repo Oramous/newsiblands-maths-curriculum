@@ -818,7 +818,12 @@ if(levelTargets.length === 0){
     return;
 }
 
-if(level === 1){
+if(
+hasBelonging &&
+level === Math.min(
+...levels.filter(x => x <= 3)
+)
+){
 
 html += `
 <div class="foundation-banner">
@@ -830,12 +835,34 @@ html += `
 
 }
 
-if(level === 4){
+if(
+hasAchievement &&
+level === Math.min(
+...levels.filter(x => x >= 4 && x <= 7)
+)
+){
 
 html += `
 <div class="achievement-banner">
 
 🔵 Achievement Curriculum
+
+</div>
+`;
+
+}
+
+if(
+hasCelebration &&
+level === Math.min(
+...levels.filter(x => x >= 8)
+)
+){
+
+html += `
+<div class="celebration-banner">
+
+🟣 Celebration Curriculum
 
 </div>
 `;

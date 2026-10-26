@@ -11,8 +11,8 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" href="favicon.png">
 
-https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.jsscript>
-data.jsscript>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="data.js"></script>
 
 <style>
 
@@ -169,6 +169,18 @@ textarea{
     margin-top:4px;
 }
 
+#recommendationOutput p{
+    margin-bottom:12px;
+}
+
+.match-card{
+    background:#f7f9fc;
+    border-left:5px solid var(--blue);
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:8px;
+}
+    
 @media(max-width:1000px){
 
 .sidebar{
@@ -270,9 +282,30 @@ placeholder="Describe needs, barriers and difficulties..."></textarea>
 
 <button
 class="primary-btn"
+onclick="showRecommendation()">
+⚡ Instant Recommendation
+</button>
+
+<button
+class="primary-btn"
 onclick="generateAndOpen()">
 🤖 Open in Copilot
 </button>
+
+
+</div>
+
+<div class="card">
+
+<h2>⚡ Instant Recommendation</h2>
+<br>
+
+<div id="recommendationOutput">
+<p>
+Describe the learner above and click
+<strong>Instant Recommendation</strong>.
+</p>
+</div>
 
 </div>
 
@@ -448,6 +481,137 @@ function searchCurriculum(text,scope,target){
 
 }
 
+function showRecommendation(){
+
+    const currentTarget =
+        document.getElementById(
+            "currentTarget"
+        ).value;
+
+    const strengths =
+        document.getElementById(
+            "strengths"
+        ).value;
+
+    const needs =
+        document.getElementById(
+            "needs"
+        ).value;
+
+    const scope =
+        document.getElementById(
+            "curriculumScope"
+        ).value;
+
+    const matches =
+        searchCurriculum(
+            strengths +
+            " " +
+            needs +
+            " " +
+            currentTarget,
+            scope,
+            currentTarget
+        );
+
+    if(matches.length === 0){
+
+        document.getElementById(
+            "recommendationOutput"
+        ).innerHTML =
+        `
+        <p>
+        No curriculum matches found.
+        Try adding more detail.
+        </p>
+        `;
+
+        return;
+    }
+
+    const topMatches =
+        matches.slice(0,5);
+
+    let html = "";
+
+    topMatches.forEach((match,index)=>{
+
+        html += `
+
+        <div class="match-card">
+
+        <p>
+        <strong>
+        Match ${index+1}
+        </strong>
+        </p>
+
+        <p>
+        <strong>Strand:</strong><br>
+        ${match.Strand}
+        </p>
+
+        <p>
+        <strong>Level:</strong><br>
+        ${match.Level}
+        </p>
+
+        <p>
+        <strong>Objective:</strong><br>
+        ${match.Target}
+        </p>
+
+        <p>
+        <strong>EHCP Target:</strong><br>
+        ${match["Long term EHCP Target"] || "Not specified"}
+        </p>
+
+        <p>
+        <strong>Next Step Within Level:</strong><br>
+        ${match["Next Steps within level"] || "Not specified"}
+        </p>
+
+        <p>
+        <strong>Next Step Level Up:</strong><br>
+        ${match["Next steps level up"] || "Not specified"}
+        </p>
+
+        <details>
+            <summary>
+                Activities & Information
+            </summary>
+
+            <br>
+
+            <p>
+            <strong>Activities:</strong><br>
+            ${match.Activities || "Not specified"}
+            </p>
+
+            <p>
+            <strong>Misconceptions:</strong><br>
+            ${match.Misconceptions || "Not specified"}
+            </p>
+
+            <p>
+            <strong>Vocabulary:</strong><br>
+            ${match.Vocab || "Not specified"}
+            </p>
+
+        </details>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById(
+        "recommendationOutput"
+    ).innerHTML = html;
+
+}
+    
 function buildPrompt(){
 
     const communication =
@@ -580,10 +744,10 @@ async function generateAndOpen(){
 
     await navigator.clipboard.writeText(prompt);
 
-    window.open(
-        "https://copilot.microsoft.com",
-        "_blank"
-    );
+window.open(
+    "https://copilot.microsoft.com",
+    "_blank"
+);
 
     alert(
         "Prompt copied to clipboard.\n\nPaste into Copilot using Ctrl+V."

@@ -553,26 +553,46 @@ box-shadow:0 2px 8px rgba(0,0,0,.1);
     ''
     }
 
-    ${
-    info['Learning Areas']
-    ?
-    `
-    <h2>Learning Areas</h2>
+   ${
+info['Learning Areas']
+?
+`
+<h2>Learning Areas</h2>
 
-    <ul>
+${
+info['Flowchart']
+?
+`
+<div style="text-align:center; margin:20px 0;">
 
-    ${
-    info['Learning Areas']
-        .split('|')
-        .map(x => `<li>${x.trim()}</li>`)
-        .join('')
-    }
+<img
+src="${info['Flowchart']}"
+style="
+max-width:100%;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+">
 
-    </ul>
-    `
-    :
-    ''
-    }
+</div>
+`
+:
+''
+}
+
+<ul>
+
+${
+info['Learning Areas']
+    .split('|')
+    .map(x => `<li>${x.trim()}</li>`)
+    .join('')
+}
+
+</ul>
+`
+:
+''
+}
 
 </div>
 

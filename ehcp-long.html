@@ -531,7 +531,12 @@ targets.forEach(target=>{
 
 let matchingRows =
 allData.filter(x =>
-x['Long term EHCP Target'] === target
+x['Long term EHCP Target']
+.toLowerCase()
+.split('|')
+.map(y => y.trim())
+.includes(target.toLowerCase())
+
 );
 
 let minStage =

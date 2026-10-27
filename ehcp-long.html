@@ -521,9 +521,11 @@ html += `
 let targets =
 [...new Set(
 stageRows
-.filter(x=>x.Strand===strand)
-.map(
-x=>x['Long term EHCP Target']
+.filter(x => x.Strand === strand)
+.flatMap(x =>
+(x['Long term EHCP Target'] || '')
+.split('|')
+.map(y => y.trim())
 )
 )];
 
@@ -531,6 +533,9 @@ targets.forEach(target=>{
 
 let matchingRows =
 allData.filter(x =>
+
+x['Long term EHCP Target'] &&
+
 x['Long term EHCP Target']
 .toLowerCase()
 .split('|')
@@ -538,6 +543,7 @@ x['Long term EHCP Target']
 .includes(target.toLowerCase())
 
 );
+
 
 let minStage =
 Math.min(

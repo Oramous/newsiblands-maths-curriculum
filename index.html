@@ -456,7 +456,7 @@ assessment, EHCP outcomes and teaching resources.
 id="searchInput"
 class="search-box"
 type="text"
-placeholder="Search targets, EHCP outcomes, vocabulary, activities or ask KARL for support..."
+placeholder="Search targets, strands, vocabulary, learning areas, focus areas or EHCP targets...">
 
 </form>
 
@@ -793,6 +793,23 @@ New Siblands School Mathematics Curriculum
 </div>
 
 <script>
+
+function goToSearch(){
+
+    const search =
+    document.getElementById("searchInput")
+    .value
+    .trim();
+
+    if(search){
+
+        window.location.href =
+        "search.html?q=" +
+        encodeURIComponent(search);
+
+    }
+
+}
 
 </script>
  

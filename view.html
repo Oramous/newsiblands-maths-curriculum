@@ -1170,16 +1170,21 @@ x.Breakdown
 }
 
 ${
-item['Linked EHCP Areas']
+x['Linked EHCP Areas']
 ?
 `
 <div class="section-badge ehcp-badge">
 🔗 Linked EHCP Areas
 </div>
 
-<p>
-${item['Linked EHCP Areas']}
-</p>
+${
+x['Linked EHCP Areas']
+.split('|')
+.map(area =>
+`<span class="tag">${area.trim()}</span>`
+)
+.join('')
+}
 `
 :
 ''

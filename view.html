@@ -1055,6 +1055,27 @@ item.Misconceptions
 }
 
 ${
+item['Linked EHCP Areas']
+?
+`
+<div class="section-badge ehcp-badge">
+🔗 Linked EHCP Areas
+</div>
+
+${
+item['Linked EHCP Areas']
+.split('|')
+.map(area =>
+`<span class="tag">${area.trim()}</span>`
+)
+.join('')
+}
+`
+:
+''
+}
+
+${
 item.Cycle || item.Term
 ?
 `

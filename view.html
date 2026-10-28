@@ -661,19 +661,31 @@ let filtered = data;
 
 if(strand){
 
-filtered = filtered.filter(item =>
+filtered = filtered.filter(item => {
+
+const primaryMatch =
 
 item.Strand &&
-
 item.Strand
+.toLowerCase()
+.trim() ===
+strand.toLowerCase();
+
+const secondaryMatch =
+
+item['Secondary Strands'] &&
+
+item['Secondary Strands']
 .toLowerCase()
 .split('|')
 .map(x => x.trim())
 .includes(
 strand.toLowerCase()
-)
-
 );
+
+return primaryMatch || secondaryMatch;
+
+});
 
 }
 

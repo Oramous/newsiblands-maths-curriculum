@@ -462,6 +462,11 @@ rows.map(x => x.Pathway)
 
 pathways.forEach(pathway => {
 
+let pathwayRows =
+rows.filter(x =>
+x.Pathway === pathway
+);
+
 let pathwayClass = 'achievement-heading';
 
 if(pathway.toLowerCase().includes('belong')){
@@ -473,126 +478,210 @@ pathwayClass = 'celebration-heading';
 }
 
 html += `
+
 <div class="pathway-heading ${pathwayClass}">
 ${pathway}
 </div>
+
 `;
 
-let pathwayRows =
-rows.filter(x =>
-x.Pathway === pathway
+let ehcpTargets = {};
+
+pathwayRows.forEach(row => {
+
+if(!row['Long term EHCP Target'])
+return;
+
+row['Long term EHCP Target']
+.split('|')
+.map(x => x.trim())
+.forEach(target => {
+
+if(!ehcpTargets[target]){
+
+ehcpTargets[target] = [];
+
+}
+
+ehcpTargets[target].push(row);
+
+});
+
+});
+
+let targetList =
+Object.entries(ehcpTargets)
+.map(([target, rows]) => {
+
+const levels =
+rows.map(r => Number(r.Level));
+
+return {
+
+target,
+rows,
+
+minStage:
+Math.min(...levels),
+
+maxStage:
+Math.max(...levels),
+
+primaryStrand:
+rows[0].Strand
+
+};
+
+})
+.sort((a,b)=>{
+
+if(a.minStage !== b.minStage){
+
+return a.minStage - b.minStage;
+
+}
+
+if(a.maxStage !== b.maxStage){
+
+return a.maxStage - b.maxStage;
+
+}
+
+return a.primaryStrand.localeCompare(
+b.primaryStrand
 );
 
-let stages =
-[...new Set(
-pathwayRows.map(
-x => Number(x.Level))
-)]
-.sort((a,b)=>a-b);
+});
 
-stages.forEach(stage => {
+let currentGroup = '';
+
+targetList.forEach(item => {
+
+const rangeText =
+
+item.minStage === item.maxStage
+
+?
+
+`Stage ${item.minStage}`
+
+:
+
+`Stage ${item.minStage}-${item.maxStage}`;
+
+if(currentGroup !== rangeText){
 
 html += `
+
 <div class="stage-heading">
 
-Stage ${stage}
+${rangeText}
 
 </div>
+
 `;
 
-let stageRows =
-pathwayRows.filter(
-x => Number(x.Level) === stage
-);
+currentGroup = rangeText;
 
-let strands =
-[...new Set(
-stageRows.map(x => x.Strand)
-)];
-
-strands.forEach(strand => {
+}
 
 html += `
+
 <div class="card ehcp-card">
 
-<h3>${strand}</h3>
-`;
+<h3>
 
-let targets =
-[...new Set(
-stageRows
-.filter(x => x.Strand === strand)
-.flatMap(x =>
-(x['Long term EHCP Target'] || '')
-.split('|')
-.map(y => y.trim())
-)
-)];
+${item.primaryStrand}
 
-targets.forEach(target=>{
-
-let matchingRows =
-allData.filter(x =>
-
-x['Long term EHCP Target'] &&
-
-x['Long term EHCP Target']
-.toLowerCase()
-.split('|')
-.map(y => y.trim())
-.includes(target.toLowerCase())
-
-);
-
-
-let minStage =
-Math.min(
-...matchingRows.map(
-x=>Number(x.Level))
-);
-
-let maxStage =
-Math.max(
-...matchingRows.map(
-x=>Number(x.Level))
-);
-
-html += `
+</h3>
 
 <details>
 
 <summary>
 
-${target}
+${item.target}
 
 </summary>
 
-<div class="info-row">
+`;
 
-<strong>Learning Area:</strong>
+const learningAreas =
+[...new Set(
+item.rows
+.map(x => x['Learning Area'])
+.filter(Boolean)
+)];
 
-${matchingRows[0]['Learning Area'] || ''}
+if(learningAreas.length){
 
-</div>
+html += `
 
-<div class="info-row">
+<p>
+
+<strong>Learning Areas:</strong>
+
+${learningAreas.join(', ')}
+
+</p>
+
+`;
+
+}
+
+const secondaryStrands =
+[...new Set(
+
+item.rows
+.flatMap(row =>
+
+(row['Secondary Strands'] || '')
+.split('|')
+.map(x => x.trim())
+
+)
+.filter(Boolean)
+
+)];
+
+if(secondaryStrands.length){
+
+html += `
+
+<p>
+
+<strong>Additional Strands:</strong>
+
+${secondaryStrands.join(', ')}
+
+</p>
+
+`;
+
+}
+
+html += `
+
+<p>
 
 <strong>Stage Range:</strong>
 
-Stage ${minStage}
--
-Stage ${maxStage}
+${rangeText}
 
+</p>
+
+<div class="section-badge ehcp-badge">
+Associated Curriculum Targets
 </div>
 
 `;
 
-matchingRows
+item.rows
 .sort((a,b)=>
 Number(a.Level)
 -
-Number(b.Level))
-.forEach(row=>{
+Number(b.Level)
+)
+.forEach(row => {
 
 let pathwayColour = 'achievement';
 
@@ -637,6 +726,18 @@ ${row.Breakdown ? `
 <p>${row.Breakdown}</p>
 ` : ''}
 
+${row['Linked EHCP Areas'] ? `
+<div class="section-badge ehcp-badge">
+🔗 Linked EHCP Areas
+</div>
+
+${row['Linked EHCP Areas']
+.split('|')
+.map(area =>
+`<span class="tag">${area.trim()}</span>`)
+.join('')}
+` : ''}
+
 ${row.Emerging ? `
 <div class="section-badge emerging-badge">
 🟢 Emerging
@@ -664,9 +765,9 @@ ${row.Activities ? `
 </div>
 <ul>
 ${row.Activities
-.split("|")
+.split('|')
 .map(x=>`<li>${x.trim()}</li>`)
-.join("")}
+.join('')}
 </ul>
 ` : ''}
 
@@ -676,31 +777,10 @@ ${row.Vocab ? `
 </div>
 
 ${row.Vocab
-.split("|")
+.split('|')
 .map(word =>
 `<span class="tag">${word.trim()}</span>`)
-.join("")}
-` : ''}
-
-${row.Resources ? `
-<div class="section-badge resources-badge">
-📚 Resources
-</div>
-<p>${row.Resources}</p>
-` : ''}
-
-${row['Long term EHCP Target'] ? `
-<div class="section-badge ehcp-badge">
-🧩 Long-Term EHCP Target
-</div>
-<p>${row['Long term EHCP Target']}</p>
-` : ''}
-
-${row['Next Steps within level'] ? `
-<div class="section-badge nextsteps-badge">
-🚀 Next Steps Within Stage
-</div>
-<p>${row['Next Steps within level']}</p>
+.join('')}
 ` : ''}
 
 </div>
@@ -712,24 +792,18 @@ ${row['Next Steps within level'] ? `
 });
 
 html += `
+
 </details>
-`;
 
-});
-
-html += `
 </div>
-`;
 
-});
+`;
 
 });
 
 });
 
 document.getElementById('content').innerHTML = html;
-
-}
 
 function searchEHCP(){
 

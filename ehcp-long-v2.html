@@ -391,6 +391,21 @@ Number(row.Level)
 const primaryStrand =
 rows[0].Strand;
 
+const secondaryStrands =
+[...new Set(
+
+rows.flatMap(r =>
+
+(r['Secondary Strands'] || '')
+.split('|')
+.map(x => x.trim())
+
+)
+
+.filter(Boolean)
+
+)];
+
 return {
 
 target,
@@ -402,7 +417,9 @@ Math.min(...levels),
 maxStage:
 Math.max(...levels),
 
-primaryStrand
+primaryStrand,
+
+secondaryStrands
 
 };
 

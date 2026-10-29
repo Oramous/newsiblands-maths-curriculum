@@ -463,12 +463,6 @@ html += `
 
 <div class="result-card ehcp-card">
 
-<h3>
-
-${item.primaryStrand}
-
-</h3>
-
 <details>
 
 <summary>
@@ -484,6 +478,30 @@ ${item.target}
 ${range}
 
 </p>
+
+<p>
+
+<strong>Primary Strand:</strong>
+
+${item.primaryStrand}
+
+</p>
+
+${
+item.secondaryStrands.length
+?
+`
+<p>
+
+<strong>Additional Strands:</strong>
+
+${item.secondaryStrands.join(', ')}
+
+</p>
+`
+:
+''
+}
 
 <div class="section-badge ehcp-badge">
 Associated Curriculum Targets

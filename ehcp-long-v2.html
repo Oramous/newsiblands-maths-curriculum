@@ -137,6 +137,16 @@ color:#003B5C;
 margin-bottom:10px;
 }
 
+.stage-heading{
+    background:#003B5C;
+    color:white;
+    padding:10px 15px;
+    border-radius:10px;
+    margin:25px 0 15px 0;
+    font-weight:bold;
+    font-size:1.1rem;
+}
+    
 </style>
 
 </head>
@@ -198,16 +208,14 @@ margin-bottom:10px;
 <label>
 <input type="checkbox"
 class="subjectFilter"
-value="Number"
-checked>
+value="Number">
 Number
 </label>
 
 <label>
 <input type="checkbox"
 class="subjectFilter"
-value="SSM"
-checked>
+value="SSM">
 Shape, Space & Measure
 </label>
 
@@ -221,11 +229,11 @@ Shape, Space & Measure
 
 <div class="checkbox-grid">
 
-<label><input type="checkbox" class="pathwayFilter" value="Belonging" checked> Belonging</label>
+<label><input type="checkbox" class="pathwayFilter" value="Belonging" > Belonging</label>
 
-<label><input type="checkbox" class="pathwayFilter" value="Achievement" checked> Achievement</label>
+<label><input type="checkbox" class="pathwayFilter" value="Achievement" > Achievement</label>
 
-<label><input type="checkbox" class="pathwayFilter" value="Celebration" checked> Celebration</label>
+<label><input type="checkbox" class="pathwayFilter" value="Celebration" > Celebration</label>
 
 </div>
 
@@ -345,6 +353,8 @@ function buildStrandFilters(){
 
     let html = '';
 
+let currentRange = '';
+    
     strands.forEach(strand => {
 
         html += `
@@ -688,9 +698,27 @@ function renderTargets(){
 
     })
 
-    .forEach(item => {
+.forEach(item => {
 
-        const range =
+    const range =
+
+        item.minStage === item.maxStage
+        ?
+        `Stage ${item.minStage}`
+        :
+        `Stage ${item.minStage}-${item.maxStage}`;
+
+    if(range !== currentRange){
+
+        html += `
+        <div class="stage-heading">
+            ${range}
+        </div>
+        `;
+
+        currentRange = range;
+
+    }
 
             item.minStage ===
             item.maxStage

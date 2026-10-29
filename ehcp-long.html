@@ -485,7 +485,7 @@ ${pathway}
 
 `;
 
-let ehcpTargets = {};
+let targetMap = {};
 
 pathwayRows.forEach(row => {
 
@@ -497,24 +497,47 @@ row['Long term EHCP Target']
 .map(x => x.trim())
 .forEach(target => {
 
-if(!ehcpTargets[target]){
+if(!targetMap[target]){
 
-ehcpTargets[target] = [];
+targetMap[target] = [];
 
 }
 
-ehcpTargets[target].push(row);
+targetMap[target].push(row);
 
 });
 
 });
 
-let targetList =
-Object.entries(ehcpTargets)
+let targets =
+Object.entries(targetMap)
 .map(([target, rows]) => {
 
 const levels =
-rows.map(r => Number(r.Level));
+rows.map(x => Number(x.Level));
+
+const strands =
+[...new Set(
+rows.map(x => x.Strand)
+)];
+
+const learningAreas =
+[...new Set(
+rows
+.map(x => x['Learning Area'])
+.filter(Boolean)
+)];
+
+const secondaryStrands =
+[...new Set(
+rows
+.flatMap(x =>
+(x['Secondary Strands'] || '')
+.split('|')
+.map(y => y.trim())
+)
+.filter(Boolean)
+)];
 
 return {
 
@@ -528,7 +551,11 @@ maxStage:
 Math.max(...levels),
 
 primaryStrand:
-rows[0].Strand
+strands[0],
+
+learningAreas,
+
+secondaryStrands
 
 };
 
@@ -553,9 +580,9 @@ b.primaryStrand
 
 });
 
-let currentGroup = '';
+let currentRange = '';
 
-targetList.forEach(item => {
+targets.forEach(item => {
 
 const rangeText =
 
@@ -569,7 +596,7 @@ item.minStage === item.maxStage
 
 `Stage ${item.minStage}-${item.maxStage}`;
 
-if(currentGroup !== rangeText){
+if(rangeText !== currentRange){
 
 html += `
 
@@ -581,7 +608,7 @@ ${rangeText}
 
 `;
 
-currentGroup = rangeText;
+currentRange = rangeText;
 
 }
 
@@ -605,14 +632,7 @@ ${item.target}
 
 `;
 
-const learningAreas =
-[...new Set(
-item.rows
-.map(x => x['Learning Area'])
-.filter(Boolean)
-)];
-
-if(learningAreas.length){
+if(item.learningAreas.length){
 
 html += `
 
@@ -620,7 +640,7 @@ html += `
 
 <strong>Learning Areas:</strong>
 
-${learningAreas.join(', ')}
+${item.learningAreas.join(', ')}
 
 </p>
 
@@ -628,22 +648,7 @@ ${learningAreas.join(', ')}
 
 }
 
-const secondaryStrands =
-[...new Set(
-
-item.rows
-.flatMap(row =>
-
-(row['Secondary Strands'] || '')
-.split('|')
-.map(x => x.trim())
-
-)
-.filter(Boolean)
-
-)];
-
-if(secondaryStrands.length){
+if(item.secondaryStrands.length){
 
 html += `
 
@@ -651,7 +656,7 @@ html += `
 
 <strong>Additional Strands:</strong>
 
-${secondaryStrands.join(', ')}
+${item.secondaryStrands.join(', ')}
 
 </p>
 
@@ -677,8 +682,7 @@ Associated Curriculum Targets
 
 item.rows
 .sort((a,b)=>
-Number(a.Level)
--
+Number(a.Level) -
 Number(b.Level)
 )
 .forEach(row => {
@@ -763,6 +767,7 @@ ${row.Activities ? `
 <div class="section-badge activities-badge">
 🎲 Suggested Activities
 </div>
+
 <ul>
 ${row.Activities
 .split('|')
@@ -781,6 +786,20 @@ ${row.Vocab
 .map(word =>
 `<span class="tag">${word.trim()}</span>`)
 .join('')}
+` : ''}
+
+${row.Resources ? `
+<div class="section-badge resources-badge">
+📚 Resources
+</div>
+<p>${row.Resources}</p>
+` : ''}
+
+${row['Next Steps within level'] ? `
+<div class="section-badge nextsteps-badge">
+🚀 Next Steps Within Stage
+</div>
+<p>${row['Next Steps within level']}</p>
 ` : ''}
 
 </div>

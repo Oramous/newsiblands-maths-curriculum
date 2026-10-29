@@ -355,33 +355,237 @@ function buildResults(){
 
 let html = '';
 
+let targetMap = {};
+
+allData.forEach(row => {
+
+if(!row['Long term EHCP Target'])
+return;
+
+row['Long term EHCP Target']
+.split('|')
+.map(x => x.trim())
+.forEach(target => {
+
+if(!targetMap[target]){
+
+targetMap[target] = [];
+
+}
+
+targetMap[target].push(row);
+
+});
+
+});
+
+let targets =
+Object.entries(targetMap)
+.map(([target, rows]) => {
+
+const levels =
+rows.map(row =>
+Number(row.Level)
+);
+
+const primaryStrand =
+rows[0].Strand;
+
+return {
+
+target,
+rows,
+
+minStage:
+Math.min(...levels),
+
+maxStage:
+Math.max(...levels),
+
+primaryStrand
+
+};
+
+})
+.sort((a,b)=>{
+
+if(a.minStage !== b.minStage){
+
+return a.minStage - b.minStage;
+
+}
+
+if(a.maxStage !== b.maxStage){
+
+return a.maxStage - b.maxStage;
+
+}
+
+return a.primaryStrand.localeCompare(
+b.primaryStrand
+);
+
+});
+
+let currentRange = '';
+
+targets.forEach(item => {
+
+const range =
+
+item.minStage === item.maxStage
+
+?
+
+`Stage ${item.minStage}`
+
+:
+
+`Stage ${item.minStage}-${item.maxStage}`;
+
+if(range !== currentRange){
+
 html += `
 
-<div class="result-card">
+<div class="stage-heading">
 
-<h2>
-
-EHCP Finder V2
-
-</h2>
-
-<p>
-
-Loaded curriculum rows:
-
-${allData.length}
-
-</p>
+${range}
 
 </div>
 
 `;
 
-document
-.getElementById('results')
-.innerHTML = html;
+currentRange = range;
 
 }
+
+html += `
+
+<div class="result-card ehcp-card">
+
+<h3>
+
+${item.primaryStrand}
+
+</h3>
+
+<details>
+
+<summary>
+
+${item.target}
+
+</summary>
+
+<p>
+
+<strong>Stage Range:</strong>
+
+${range}
+
+</p>
+
+<div class="section-badge ehcp-badge">
+Associated Curriculum Targets
+</div>
+
+`;
+
+item.rows
+.sort((a,b)=>
+Number(a.Level)
+-
+Number(b.Level)
+)
+.forEach(row => {
+
+html += `
+
+<details>
+
+<summary>
+
+Stage ${row.Level}
+
+-
+
+${row.Target}
+
+</summary>
+
+<div class="target-box">
+
+${row.Breakdown ? `
+<p><strong>Target Breakdown</strong><br>
+${row.Breakdown}</p>
+` : ''}
+
+${row['Linked EHCP Areas'] ? `
+<p>
+
+<strong>Linked EHCP Areas</strong>
+
+<br>
+
+${row['Linked EHCP Areas']}
+
+</p>
+` : ''}
+
+</div>
+
+</details>
+
+`;
+
+});
+
+html += `
+
+</details>
+
+</div>
+
+`;
+
+});
+    
+document.getElementById('results')
+.innerHTML = html;
+
+applyFilters();
+
+}
+
+function applyFilters(){
+
+let search =
+document.getElementById('searchBox')
+.value
+.toLowerCase();
+
+document
+.querySelectorAll('.ehcp-card')
+.forEach(card => {
+
+if(
+card.innerText
+.toLowerCase()
+.includes(search)
+){
+
+card.style.display='';
+
+}
+else{
+
+card.style.display='none';
+
+}
+
+});
+
+}    
     
 initialise();
 

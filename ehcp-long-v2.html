@@ -254,6 +254,18 @@ Shape, Space & Measure
 
 <div class="filter-group">
 
+<h3>Strand</h3>
+
+<div id="strandFilters" class="checkbox-grid">
+
+Loading strands...
+
+</div>
+
+</div>
+    
+<div class="filter-group">
+
 <h3>Search</h3>
 
 <input
@@ -281,12 +293,61 @@ async function initialise(){
     allData =
     await loadCurriculum();
 
-    console.log(
-        "Loaded curriculum rows:",
-        allData.length
-    );
+    buildStrandFilters();
 
 }
+
+function buildStrandFilters(){
+
+let strands =
+[...new Set(
+
+allData.flatMap(row => {
+
+let primary = row.Strand
+? row.Strand.split('|')
+: [];
+
+let secondary =
+row['Secondary Strands']
+? row['Secondary Strands'].split('|')
+: [];
+
+return [...primary,...secondary];
+
+})
+
+)]
+.map(x => x.trim())
+.filter(Boolean)
+.sort();
+
+let html = '';
+
+strands.forEach(strand => {
+
+html += `
+
+<label>
+
+<input
+type="checkbox"
+class="strandFilter"
+value="${strand}">
+
+${strand}
+
+</label>
+
+`;
+
+});
+
+document
+.getElementById('strandFilters')
+.innerHTML = html;
+
+}    
 
 initialise();
 

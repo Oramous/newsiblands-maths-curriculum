@@ -485,7 +485,7 @@ ${pathway}
 
 `;
 
-let targetMap = {};
+let ehcpTargets = {};
 
 pathwayRows.forEach(row => {
 
@@ -497,46 +497,47 @@ row['Long term EHCP Target']
 .map(x => x.trim())
 .forEach(target => {
 
-if(!targetMap[target]){
+if(!ehcpTargets[target]){
 
-targetMap[target] = [];
+ehcpTargets[target] = [];
 
 }
 
-targetMap[target].push(row);
+ehcpTargets[target].push(row);
 
 });
 
 });
 
-let targets =
-Object.entries(targetMap)
+let targetList =
+Object.entries(ehcpTargets)
 .map(([target, rows]) => {
 
 const levels =
-rows.map(x => Number(x.Level));
+rows.map(r => Number(r.Level));
 
-const strands =
-[...new Set(
-rows.map(x => x.Strand)
-)];
+const primaryStrand =
+rows[0].Strand;
 
 const learningAreas =
 [...new Set(
 rows
-.map(x => x['Learning Area'])
+.map(r => r['Learning Area'])
 .filter(Boolean)
 )];
 
 const secondaryStrands =
 [...new Set(
-rows
-.flatMap(x =>
-(x['Secondary Strands'] || '')
+
+rows.flatMap(r =>
+
+(r['Secondary Strands'] || '')
 .split('|')
-.map(y => y.trim())
+.map(x => x.trim())
+
 )
 .filter(Boolean)
+
 )];
 
 return {
@@ -550,8 +551,7 @@ Math.min(...levels),
 maxStage:
 Math.max(...levels),
 
-primaryStrand:
-strands[0],
+primaryStrand,
 
 learningAreas,
 
@@ -582,9 +582,9 @@ b.primaryStrand
 
 let currentRange = '';
 
-targets.forEach(item => {
+targetList.forEach(item => {
 
-const rangeText =
+const rangeLabel =
 
 item.minStage === item.maxStage
 
@@ -596,19 +596,19 @@ item.minStage === item.maxStage
 
 `Stage ${item.minStage}-${item.maxStage}`;
 
-if(rangeText !== currentRange){
+if(currentRange !== rangeLabel){
 
 html += `
 
 <div class="stage-heading">
 
-${rangeText}
+${rangeLabel}
 
 </div>
 
 `;
 
-currentRange = rangeText;
+currentRange = rangeLabel;
 
 }
 
@@ -617,9 +617,7 @@ html += `
 <div class="card ehcp-card">
 
 <h3>
-
 ${item.primaryStrand}
-
 </h3>
 
 <details>
@@ -670,7 +668,7 @@ html += `
 
 <strong>Stage Range:</strong>
 
-${rangeText}
+${rangeLabel}
 
 </p>
 
@@ -681,10 +679,7 @@ Associated Curriculum Targets
 `;
 
 item.rows
-.sort((a,b)=>
-Number(a.Level) -
-Number(b.Level)
-)
+.sort((a,b)=>Number(a.Level)-Number(b.Level))
 .forEach(row => {
 
 let pathwayColour = 'achievement';
@@ -723,13 +718,6 @@ ${row.Target}
 ${row.Pathway}
 </div>
 
-${row.Breakdown ? `
-<div class="section-badge breakdown-badge">
-🎯 Target Breakdown
-</div>
-<p>${row.Breakdown}</p>
-` : ''}
-
 ${row['Linked EHCP Areas'] ? `
 <div class="section-badge ehcp-badge">
 🔗 Linked EHCP Areas
@@ -740,6 +728,14 @@ ${row['Linked EHCP Areas']
 .map(area =>
 `<span class="tag">${area.trim()}</span>`)
 .join('')}
+
+` : ''}
+
+${row.Breakdown ? `
+<div class="section-badge breakdown-badge">
+🎯 Target Breakdown
+</div>
+<p>${row.Breakdown}</p>
 ` : ''}
 
 ${row.Emerging ? `
@@ -767,7 +763,6 @@ ${row.Activities ? `
 <div class="section-badge activities-badge">
 🎲 Suggested Activities
 </div>
-
 <ul>
 ${row.Activities
 .split('|')
@@ -795,13 +790,6 @@ ${row.Resources ? `
 <p>${row.Resources}</p>
 ` : ''}
 
-${row['Next Steps within level'] ? `
-<div class="section-badge nextsteps-badge">
-🚀 Next Steps Within Stage
-</div>
-<p>${row['Next Steps within level']}</p>
-` : ''}
-
 </div>
 
 </details>
@@ -822,9 +810,11 @@ html += `
 
 });
 
-document.getElementById('content').innerHTML = html;
+document.getElementById('content')
+.innerHTML = html;
 
 }
+
 
 function searchEHCP(){
 

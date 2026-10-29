@@ -288,340 +288,592 @@ placeholder="Search EHCP targets...">
 
 let allData = [];
 
+window.allTargets = [];
+let allData = [];
+
 async function initialise(){
 
-    allData =
-    await loadCurriculum();
+    allData = await loadCurriculum();
 
     buildStrandFilters();
 
     buildResults();
 
+    document.addEventListener(
+        'change',
+        applyFilters
+    );
+
+    document
+        .getElementById('searchBox')
+        .addEventListener(
+            'input',
+            applyFilters
+        );
 }
-    
+
 function buildStrandFilters(){
-    
-let strands =
-[...new Set(
 
-allData.flatMap(row => {
+    let strands = [
 
-let primary = row.Strand
-? row.Strand.split('|')
-: [];
+        ...new Set(
 
-let secondary =
-row['Secondary Strands']
-? row['Secondary Strands'].split('|')
-: [];
+            allData.flatMap(row => {
 
-return [...primary,...secondary];
+                const primary =
+                    row.Strand
+                    ? row.Strand.split('|')
+                    : [];
 
-})
+                const secondary =
+                    row['Secondary Strands']
+                    ? row['Secondary Strands'].split('|')
+                    : [];
 
-)]
-.map(x => x.trim())
-.filter(Boolean)
-.sort();
+                return [
+                    ...primary,
+                    ...secondary
+                ];
 
-let html = '';
+            })
 
-strands.forEach(strand => {
+        )
 
-html += `
+    ]
+    .map(x => x.trim())
+    .filter(Boolean)
+    .sort();
 
-<label>
+    let html = '';
 
-<input
-type="checkbox"
-class="strandFilter"
-value="${strand}">
+    strands.forEach(strand => {
 
-${strand}
+        html += `
+        <label>
+            <input
+                type="checkbox"
+                class="strandFilter"
+                value="${strand}">
+            ${strand}
+        </label>
+        `;
 
-</label>
+    });
 
-`;
+    document.getElementById(
+        'strandFilters'
+    ).innerHTML = html;
 
-});
-
-document
-.getElementById('strandFilters')
-.innerHTML = html;
-
-}    
+}
 
 function buildResults(){
 
-let html = '';
+    let targetMap = {};
 
-let targetMap = {};
+    allData.forEach(row => {
 
-allData.forEach(row => {
+        const targetField =
+            row['Long term EHCP Target'];
 
-if(!row['Long term EHCP Target'])
-return;
+        if(!targetField) return;
 
-row['Long term EHCP Target']
-.split('|')
-.map(x => x.trim())
-.forEach(target => {
+        targetField
+            .split('|')
+            .map(x => x.trim())
+            .filter(Boolean)
+            .forEach(target => {
 
-if(!targetMap[target]){
+                if(!targetMap[target]){
 
-targetMap[target] = [];
+                    targetMap[target] = [];
+
+                }
+
+                targetMap[target].push(row);
+
+            });
+
+    });
+
+    window.allTargets =
+    Object.entries(targetMap)
+    .map(([target, rows]) => {
+
+        const levels =
+            rows
+                .map(r =>
+                    Number(r.Level)
+                )
+                .filter(x =>
+                    !isNaN(x)
+                );
+
+        return {
+
+            target,
+
+            rows,
+
+            minStage:
+                Math.min(
+                    ...levels
+                ),
+
+            maxStage:
+                Math.max(
+                    ...levels
+                ),
+
+            subject:
+                rows[0].Subject || '',
+
+            pathway:
+                rows[0].Pathway || '',
+
+            primaryStrand:
+                rows[0].Strand || '',
+
+            secondaryStrands:
+
+                [...new Set(
+
+                    rows.flatMap(r =>
+
+                        (
+                            r['Secondary Strands']
+                            || ''
+                        )
+                        .split('|')
+                        .map(x =>
+                            x.trim()
+                        )
+
+                    )
+
+                )]
+                .filter(Boolean),
+
+            learningAreas:
+
+                [...new Set(
+
+                    rows.flatMap(r =>
+
+                        (
+                            r['Learning Area']
+                            || ''
+                        )
+                        .split('|')
+                        .map(x =>
+                            x.trim()
+                        )
+
+                    )
+
+                )]
+                .filter(Boolean),
+
+            ehcpAreas:
+
+                [...new Set(
+
+                    rows.flatMap(r =>
+
+                        (
+                            r['Linked EHCP Areas']
+                            || ''
+                        )
+                        .split('|')
+                        .map(x =>
+                            x.trim()
+                        )
+
+                    )
+
+                )]
+                .filter(Boolean)
+
+        };
+
+    })
+    .sort((a,b)=>{
+
+        if(
+            a.minStage !==
+            b.minStage
+        ){
+
+            return (
+                a.minStage -
+                b.minStage
+            );
+
+        }
+
+        if(
+            a.maxStage !==
+            b.maxStage
+        ){
+
+            return (
+                a.maxStage -
+                b.maxStage
+            );
+
+        }
+
+        return a.primaryStrand
+            .localeCompare(
+                b.primaryStrand
+            );
+
+    });
+
+    renderTargets();
 
 }
 
-targetMap[target].push(row);
+function renderTargets(){
 
-});
+    const selectedSubjects =
 
-});
+        [...document.querySelectorAll(
+            '.subjectFilter:checked'
+        )]
+        .map(x => x.value);
 
-let targets =
-Object.entries(targetMap)
-.map(([target, rows]) => {
+    const selectedPathways =
 
-const levels =
-rows.map(row =>
-Number(row.Level)
-);
+        [...document.querySelectorAll(
+            '.pathwayFilter:checked'
+        )]
+        .map(x => x.value);
 
-const primaryStrand =
-rows[0].Strand;
+    const selectedStages =
 
-const secondaryStrands =
-[...new Set(
+        [...document.querySelectorAll(
+            '.stageFilter:checked'
+        )]
+        .map(x =>
+            Number(x.value)
+        );
 
-rows.flatMap(r =>
+    const selectedStrands =
 
-(r['Secondary Strands'] || '')
-.split('|')
-.map(x => x.trim())
+        [...document.querySelectorAll(
+            '.strandFilter:checked'
+        )]
+        .map(x => x.value);
 
-)
+    const search =
 
-.filter(Boolean)
+        document
+        .getElementById(
+            'searchBox'
+        )
+        .value
+        .toLowerCase()
+        .trim();
 
-)];
+    let html = '';
 
-return {
+    window.allTargets
 
-target,
-rows,
+    .filter(item => {
 
-minStage:
-Math.min(...levels),
+        if(
+            selectedSubjects.length &&
+            !selectedSubjects.includes(
+                item.subject
+            )
+        ){
 
-maxStage:
-Math.max(...levels),
+            return false;
 
-primaryStrand,
+        }
 
-secondaryStrands
+        if(
+            selectedPathways.length &&
+            !selectedPathways.includes(
+                item.pathway
+            )
+        ){
 
-};
+            return false;
 
-})
-.sort((a,b)=>{
+        }
 
-if(a.minStage !== b.minStage){
+        if(
+            selectedStages.length
+        ){
 
-return a.minStage - b.minStage;
+            const matchStage =
 
-}
+                selectedStages.some(
+                    stage =>
 
-if(a.maxStage !== b.maxStage){
+                        stage >=
+                        item.minStage &&
 
-return a.maxStage - b.maxStage;
+                        stage <=
+                        item.maxStage
+                );
 
-}
+            if(!matchStage)
+                return false;
+        }
 
-return a.primaryStrand.localeCompare(
-b.primaryStrand
-);
+        if(
+            selectedStrands.length
+        ){
 
-});
+            const allStrands = [
 
-let currentRange = '';
+                item.primaryStrand,
 
-targets.forEach(item => {
+                ...item.secondaryStrands
 
-const range =
+            ];
 
-item.minStage === item.maxStage
+            const matchStrand =
 
-?
+                selectedStrands.some(
+                    strand =>
+                    allStrands.includes(
+                        strand
+                    )
+                );
 
-`Stage ${item.minStage}`
+            if(!matchStrand)
+                return false;
 
-:
+        }
 
-`Stage ${item.minStage}-${item.maxStage}`;
+        if(search){
 
-if(range !== currentRange){
+            const searchText = [
 
-html += `
+                item.target,
 
-<div class="stage-heading">
+                item.primaryStrand,
 
-${range}
+                ...item.secondaryStrands,
 
-</div>
+                ...item.rows.map(
+                    r =>
+                    r.Target || ''
+                ),
 
-`;
+                ...item.rows.map(
+                    r =>
+                    r.Breakdown || ''
+                )
 
-currentRange = range;
+            ]
+            .join(' ')
+            .toLowerCase();
 
-}
+            if(
+                !searchText.includes(
+                    search
+                )
+            ){
 
-html += `
+                return false;
 
-<div class="result-card ehcp-card">
+            }
 
-<details>
+        }
 
-<summary>
+        return true;
 
-${item.target}
+    })
 
-</summary>
+    .forEach(item => {
 
-<p>
+        const range =
 
-<strong>Stage Range:</strong>
+            item.minStage ===
+            item.maxStage
 
-${range}
+            ?
 
-</p>
+            `Stage ${item.minStage}`
 
-<p>
+            :
 
-<strong>Primary Strand:</strong>
+            `Stage ${item.minStage}-${item.maxStage}`;
 
-${item.primaryStrand}
+        html += `
 
-</p>
+        <div class="result-card">
 
-${
-item.secondaryStrands.length
-?
-`
-<p>
+            <details>
 
-<strong>Additional Strands:</strong>
+                <summary>
 
-${item.secondaryStrands.join(', ')}
+                    <strong>
+                    ${item.target}
+                    </strong>
 
-</p>
-`
-:
-''
-}
+                </summary>
 
-<div class="section-badge ehcp-badge">
-Associated Curriculum Targets
-</div>
+                <p>
 
-`;
+                    <strong>
+                    Stage Range:
+                    </strong>
 
-item.rows
-.sort((a,b)=>
-Number(a.Level)
--
-Number(b.Level)
-)
-.forEach(row => {
+                    ${range}
 
-html += `
+                </p>
 
-<details>
+                <p>
 
-<summary>
+                    <strong>
+                    Primary Strand:
+                    </strong>
 
-Stage ${row.Level}
+                    ${item.primaryStrand}
 
--
+                </p>
 
-${row.Target}
+                ${
+                    item.secondaryStrands.length
+                    ?
+                    `
+                    <p>
 
-</summary>
+                        <strong>
+                        Secondary Strands:
+                        </strong>
 
-<div class="target-box">
+                        ${item.secondaryStrands.join(', ')}
 
-${row.Breakdown ? `
-<p><strong>Target Breakdown</strong><br>
-${row.Breakdown}</p>
-` : ''}
+                    </p>
+                    `
+                    : ''
+                }
 
-${row['Linked EHCP Areas'] ? `
-<p>
+                ${
+                    item.learningAreas.length
+                    ?
+                    `
+                    <p>
 
-<strong>Linked EHCP Areas</strong>
+                        <strong>
+                        Learning Areas:
+                        </strong>
 
-<br>
+                        ${item.learningAreas.join(', ')}
 
-${row['Linked EHCP Areas']}
+                    </p>
+                    `
+                    : ''
+                }
 
-</p>
-` : ''}
+                ${
+                    item.ehcpAreas.length
+                    ?
+                    `
+                    <p>
 
-</div>
+                        <strong>
+                        Linked EHCP Areas:
+                        </strong>
 
-</details>
+                        ${item.ehcpAreas.join(', ')}
 
-`;
+                    </p>
+                    `
+                    : ''
+                }
 
-});
+                <hr style="margin:15px 0;">
 
-html += `
+                <h4>
+                Associated Curriculum Statements
+                </h4>
 
-</details>
+        `;
 
-</div>
+        item.rows
 
-`;
+        .sort((a,b)=>
 
-});
-    
-document.getElementById('results')
-.innerHTML = html;
+            Number(a.Level)
+            -
+            Number(b.Level)
 
-applyFilters();
+        )
+
+        .forEach(row => {
+
+            html += `
+
+            <div
+            style="margin-top:12px;">
+
+                <p>
+
+                    <strong>
+
+                    Stage ${row.Level}
+
+                    </strong>
+
+                </p>
+
+                <p>
+
+                    ${row.Target || ''}
+
+                </p>
+
+                ${
+                    row.Breakdown
+                    ?
+                    `
+                    <p>
+
+                    ${row.Breakdown}
+
+                    </p>
+                    `
+                    :
+                    ''
+                }
+
+            </div>
+
+            `;
+
+        });
+
+        html += `
+
+            </details>
+
+        </div>
+
+        `;
+
+    });
+
+    document
+        .getElementById(
+            'results'
+        )
+        .innerHTML = html;
 
 }
 
 function applyFilters(){
 
-let search =
-document.getElementById('searchBox')
-.value
-.toLowerCase();
-
-document
-.querySelectorAll('.ehcp-card')
-.forEach(card => {
-
-if(
-card.innerText
-.toLowerCase()
-.includes(search)
-){
-
-card.style.display='';
-
-}
-else{
-
-card.style.display='none';
+    renderTargets();
 
 }
 
-});
-
-}    
-    
 initialise();
 
 </script>

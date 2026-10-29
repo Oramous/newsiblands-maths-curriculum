@@ -387,7 +387,7 @@ background:white;
 ← Back to Homepage
 </a>
 
-<h1>Long-Term EHCP Target Finder</h1>
+<h1>Short-Term Target Finder</h1>
 
 <div class="subject-buttons">
 
@@ -416,8 +416,45 @@ type="text"
 id="ehcpSearch"
 class="search-box"
 placeholder="Search long-term targets, strands, learning areas or short-term targets..."
-onkeyup="searchEHCP()">
-  
+onkeyup="applyFilters()">
+
+<div class="card">
+
+<h3>Filters</h3>
+
+<br>
+
+<strong>Pathway</strong>
+
+<br><br>
+
+<label><input type="checkbox" class="pathwayFilter" value="Belonging" checked onchange="applyFilters()"> Belonging</label><br>
+
+<label><input type="checkbox" class="pathwayFilter" value="Achievement" checked onchange="applyFilters()"> Achievement</label><br>
+
+<label><input type="checkbox" class="pathwayFilter" value="Celebration" checked onchange="applyFilters()"> Celebration</label>
+
+<br><br>
+
+<strong>Stage</strong>
+
+<br><br>
+
+<label><input type="checkbox" class="stageFilter" value="1" onchange="applyFilters()"> 1</label>
+<label><input type="checkbox" class="stageFilter" value="2" onchange="applyFilters()"> 2</label>
+<label><input type="checkbox" class="stageFilter" value="3" onchange="applyFilters()"> 3</label>
+<label><input type="checkbox" class="stageFilter" value="4" onchange="applyFilters()"> 4</label>
+<label><input type="checkbox" class="stageFilter" value="5" onchange="applyFilters()"> 5</label>
+<label><input type="checkbox" class="stageFilter" value="6" onchange="applyFilters()"> 6</label>
+<label><input type="checkbox" class="stageFilter" value="7" onchange="applyFilters()"> 7</label>
+<label><input type="checkbox" class="stageFilter" value="8" onchange="applyFilters()"> 8</label>
+<label><input type="checkbox" class="stageFilter" value="9" onchange="applyFilters()"> 9</label>
+<label><input type="checkbox" class="stageFilter" value="10" onchange="applyFilters()"> 10</label>
+
+</div>
+
+<br>
+
 <div id="content"></div>
 
 </div>
@@ -614,7 +651,10 @@ currentRange = rangeLabel;
 
 html += `
 
-<div class="card ehcp-card">
+<div class="card ehcp-card"
+data-pathway="${pathway}"
+data-min="${item.minStage}"
+data-max="${item.maxStage}">
 
 <h3>
 ${item.primaryStrand}
@@ -816,29 +856,73 @@ document.getElementById('content')
 }
 
 
-function searchEHCP(){
+function applyFilters(){
 
 let search =
 document.getElementById('ehcpSearch')
 .value
-.toLowerCase();
+.toLowerCase()
+.trim();
+
+let selectedPathways =
+Array.from(
+document.querySelectorAll('.pathwayFilter:checked')
+).map(x => x.value);
+
+let selectedStages =
+Array.from(
+document.querySelectorAll('.stageFilter:checked')
+).map(x => Number(x.value));
 
 document
 .querySelectorAll('.ehcp-card')
 .forEach(card => {
 
-if(
-card.innerText
-.toLowerCase()
-.includes(search)
-){
+let visible = true;
 
-card.style.display = '';
+if(
+search &&
+!card.innerText.toLowerCase().includes(search)
+){
+visible = false;
+}
+
+if(
+selectedPathways.length > 0 &&
+!selectedPathways.includes(
+card.dataset.pathway
+)
+){
+visible = false;
+}
+
+if(selectedStages.length > 0){
+
+let minStage =
+Number(card.dataset.min);
+
+let maxStage =
+Number(card.dataset.max);
+
+let overlaps =
+selectedStages.some(
+s => s >= minStage && s <= maxStage
+);
+
+if(!overlaps){
+visible = false;
+}
 
 }
-else{
 
-card.style.display = 'none';
+card.style.display =
+visible
+?
+''
+:
+'none';
+
+});
 
 }
 

@@ -295,10 +295,12 @@ async function initialise(){
 
     buildStrandFilters();
 
+    buildResults();
+
 }
-
+    
 function buildStrandFilters(){
-
+    
 let strands =
 [...new Set(
 
@@ -349,6 +351,38 @@ document
 
 }    
 
+function buildResults(){
+
+let html = '';
+
+html += `
+
+<div class="result-card">
+
+<h2>
+
+EHCP Finder V2
+
+</h2>
+
+<p>
+
+Loaded curriculum rows:
+
+${allData.length}
+
+</p>
+
+</div>
+
+`;
+
+document
+.getElementById('results')
+.innerHTML = html;
+
+}
+    
 initialise();
 
 </script>

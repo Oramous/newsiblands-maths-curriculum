@@ -352,9 +352,7 @@ function buildStrandFilters(){
     .sort();
 
     let html = '';
-
-let currentRange = '';
-    
+   
     strands.forEach(strand => {
 
         html += `
@@ -587,6 +585,7 @@ function renderTargets(){
         .trim();
 
     let html = '';
+    let currentRange = '';
 
     window.allTargets
 
@@ -721,17 +720,6 @@ function renderTargets(){
         currentRange = range;
 
     }
-
-            item.minStage ===
-            item.maxStage
-
-            ?
-
-            `Stage ${item.minStage}`
-
-            :
-
-            `Stage ${item.minStage}-${item.maxStage}`;
 
         html += `
 

@@ -346,10 +346,38 @@ let allData = [];
 
 window.allTargets = [];
 
+let ehcpTargetData = [];
+
+async function loadEHCPTargets(){
+
+    return new Promise((resolve,reject)=>{
+
+        Papa.parse(
+            "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-dHEPHDYjcWHpUUxqPVCmTrMsXUKggJYdwFzedt9MVs_VD8UIzwhObXczA-uoauVqe1GTIaq-_lpc/pub?output=csv",
+            {
+                download:true,
+                header:true,
+                complete:(results)=>{
+
+                    resolve(results.data);
+
+                },
+                error:reject
+
+            }
+        );
+
+    });
+
+}
+
 async function initialise(){
 
-    allData = await loadCurriculum();
+allData = await loadCurriculum();
 
+ehcpTargetData =
+await loadEHCPTargets();
+    
     buildStrandFilters();
 
     buildResults();
@@ -450,20 +478,39 @@ function buildResults(){
 
     });
 
+const ehcpLookup = {};
+
+ehcpTargetData.forEach(row => {
+
+    const target =
+    (row['EHCP Target'] || '')
+    .trim();
+
+    if(target){
+
+        ehcpLookup[target] = row;
+
+    }
+
+});
+    
     window.allTargets =
     Object.entries(targetMap)
-    .map(([target, rows]) => {
+   .map(([target, rows]) => {
 
-        const levels =
-            rows
-                .map(r =>
-                    Number(r.Level)
-                )
-                .filter(x =>
-                    !isNaN(x)
-                );
+    const levels =
+        rows
+            .map(r =>
+                Number(r.Level)
+            )
+            .filter(x =>
+                !isNaN(x)
+            );
 
-        return {
+    const targetInfo =
+        ehcpLookup[target] || {};
+
+    return {
 
             target,
 
@@ -480,13 +527,13 @@ function buildResults(){
                 ),
 
             subject:
-                rows[0].Subject || '',
+                targetInfo.Subject || '',
 
             pathway:
                 rows[0].Pathway || '',
 
             primaryStrand:
-                rows[0].Strand || '',
+                targetInfo['Home Strand'] || '',
 
             secondaryStrands:
 
@@ -510,23 +557,15 @@ function buildResults(){
 
             learningAreas:
 
-                [...new Set(
+targetInfo['Learning Area']
 
-                    rows.flatMap(r =>
+?
 
-                        (
-                            r['Learning Area']
-                            || ''
-                        )
-                        .split('|')
-                        .map(x =>
-                            x.trim()
-                        )
+[targetInfo['Learning Area']]
 
-                    )
+:
 
-                )]
-                .filter(Boolean),
+[],
 
             ehcpAreas:
 

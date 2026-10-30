@@ -832,47 +832,24 @@ function renderTargets(){
 
                 <p>
 
-                    <strong>
-                    Primary Strand:
-                    </strong>
-
-                    ${item.primaryStrand}
-
-                </p>
-
-                ${
-                    item.secondaryStrands.length
-                    ?
-                    `
                     <p>
+    <strong>Primary Strand:</strong>
+    ${item.primaryStrand}
+</p>
 
-                        <strong>
-                        Secondary Strands:
-                        </strong>
+${item.learningAreas.length ? `
+<p>
+    <strong>Learning Area:</strong>
+    ${item.learningAreas.join(', ')}
+</p>
+` : ''}
 
-                        ${item.secondaryStrands.join(', ')}
-
-                    </p>
-                    `
-                    : ''
-                }
-
-                ${
-                    item.learningAreas.length
-                    ?
-                    `
-                    <p>
-
-                        <strong>
-                        Learning Areas:
-                        </strong>
-
-                        ${item.learningAreas.join(', ')}
-
-                    </p>
-                    `
-                    : ''
-                }
+${item.secondaryStrands.length ? `
+<p>
+    <strong>Additional Strands:</strong>
+    ${item.secondaryStrands.join(', ')}
+</p>
+` : ''}
 
                 ${
                     item.ehcpAreas.length

@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>EHCP Target Finder V2 | New Sibs Maths</title>
+<title>EHCP Target Finder | New Sibs Maths</title>
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -190,7 +190,7 @@ margin-bottom:10px;
 📚 Curriculum Documents
 </a>
 
-<a href="ehcp-long-v2.html">
+<a href="ehcp-long.html">
 🧩 EHCP Target Finder
 </a>
 
@@ -909,49 +909,113 @@ function renderTargets(){
 
         )
 
-        .forEach(row => {
+      .forEach(row => {
 
-            html += `
+    html += `
 
-            <div
-            style="margin-top:12px;">
+    <details
+        style="
+            margin-top:12px;
+            border:1px solid #ddd;
+            border-radius:8px;
+            padding:10px;
+        ">
 
-                <p>
+        <summary
+            style="
+                cursor:pointer;
+                font-weight:bold;
+            ">
 
-                    <strong>
+            Stage ${row.Level}
+            -
+            ${row.Target || ''}
 
-                    Stage ${row.Level}
+        </summary>
 
-                    </strong>
+        <div style="margin-top:12px;">
 
-                </p>
+            ${row.Subject ? `
+            <p>
 
-                <p>
+                <strong>Subject:</strong>
 
-                    ${row.Target || ''}
+                ${row.Subject}
 
-                </p>
+            </p>
+            ` : ''}
 
-                ${
-                    row.Breakdown
-                    ?
-                    `
-                    <p>
+            ${row.Pathway ? `
+            <p>
 
-                    ${row.Breakdown}
+                <strong>Pathway:</strong>
 
-                    </p>
-                    `
-                    :
-                    ''
-                }
+                ${row.Pathway}
 
-            </div>
+            </p>
+            ` : ''}
 
-            `;
+            ${row.Strand ? `
+            <p>
 
-        });
+                <strong>Strand:</strong>
 
+                ${row.Strand}
+
+            </p>
+            ` : ''}
+
+            ${row['Learning Area'] ? `
+            <p>
+
+                <strong>Learning Area:</strong>
+
+                ${row['Learning Area']}
+
+            </p>
+            ` : ''}
+
+            ${row['Linked EHCP Areas'] ? `
+            <p>
+
+                <strong>Linked EHCP Areas:</strong>
+
+                ${row['Linked EHCP Areas']}
+
+            </p>
+            ` : ''}
+
+            ${row.Breakdown ? `
+            <p>
+
+                <strong>Target Breakdown:</strong>
+
+                <br>
+
+                ${row.Breakdown}
+
+            </p>
+            ` : ''}
+
+            ${row.Target ? `
+            <p>
+
+                <strong>Statement:</strong>
+
+                <br>
+
+                ${row.Target}
+
+            </p>
+            ` : ''}
+
+        </div>
+
+    </details>
+
+    `;
+
+});
         html += `
 
             </details>

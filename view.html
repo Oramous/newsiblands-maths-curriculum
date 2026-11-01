@@ -349,6 +349,34 @@ margin-bottom:20px;
 .assessment-level{
     margin-left:20px;
 }
+
+.content p{
+    margin-bottom:12px;
+    line-height:1.6;
+}
+
+.content ul{
+    margin-bottom:16px;
+}
+
+.content strong{
+    display:block;
+    margin-top:18px;
+    margin-bottom:6px;
+}
+
+.assessment-level{
+    margin-left:25px;
+    margin-bottom:15px;
+}
+
+.target-box{
+    margin-top:10px;
+}
+
+.target-box details{
+    margin-top:12px;
+}
     
 </style>
 
@@ -982,9 +1010,7 @@ ${
 item.Activities
 ?
 `
-<div class="section-badge activities-badge">
-🎲 Suggested Activities
-</div>
+<p><strong>🎲 Suggested Activities</strong></p>
 
 <ul>
 ${
@@ -1109,9 +1135,7 @@ ${
 item['Long term EHCP Target']
 ?
 `
-<div class="section-badge ehcp-badge">
-🧩 Long Term EHCP Target
-</div>
+<p><strong>🧩 Long Term EHCP Targets</strong></p>
 
 <div class="target-box">
 
@@ -1129,17 +1153,17 @@ ${target.trim()}
 <div class="target-box">
 
 <p>
-<strong>Strand:</strong>
+<strong>📚 Strand</strong>
 ${item.Strand}
 </p>
 
 <p>
-<strong>Learning Area:</strong>
+<strong>🧩Learning Area:</strong>
 ${item['Learning Area'] || ''}
 </p>
 
 <p>
-<strong>Stage Range:</strong>
+<strong>📈Stage Range:</strong>
 
 Stage ${Math.min(
 ...filtered
@@ -1157,6 +1181,33 @@ x['Long term EHCP Target'] === item['Long term EHCP Target']
 .map(x => Number(x.Level))
 )}
 </p>
+
+<p>
+<strong>Associated Curriculum Statements:</strong>
+</p>
+
+<ul>
+
+${
+filtered
+.filter(x =>
+x['Long term EHCP Target']
+&&
+x['Long term EHCP Target']
+.split('|')
+.map(t => t.trim())
+.includes(target.trim())
+)
+.sort((a,b)=>Number(a.Level)-Number(b.Level))
+.map(x => `
+<li>
+Stage ${x.Level} - ${x.Target}
+</li>
+`)
+.join('')
+}
+
+</ul>
 
 </div>
 
@@ -1186,11 +1237,11 @@ Stage ${x.Level} - ${x.Target}
 <div class="target-box">
 
 <p>
-<strong>Strand:</strong> ${x.Strand || ''}
+<strong>📚 Strand</strong> ${x.Strand || ''}
 </p>
 
 <p>
-<strong>Learning Area:</strong> ${x['Learning Area'] || ''}
+<strong>🧩Learning Area:</strong> ${x['Learning Area'] || ''}
 </p>
 
 ${

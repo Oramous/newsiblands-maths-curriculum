@@ -345,6 +345,10 @@ margin-top:20px;
 margin-bottom:20px;
 
 }
+
+.assessment-level{
+    margin-left:20px;
+}
     
 </style>
 
@@ -909,17 +913,15 @@ ${item.Target}
 
 <div class="content">
 
-<div class="pathway ${pathwayClass}">
-${item.Pathway}
-</div>
+<p><strong>🏞 Pathway</strong></p>
+
+<p>${item.Pathway}</p>
 
 ${
 item.Breakdown
 ?
 `
-<div class="section-badge breakdown-badge">
-🎯 Target Breakdown
-</div>
+<p><strong>🪜 Smaller Steps</strong></p>
 
 <p>${item.Breakdown}</p>
 `
@@ -928,14 +930,19 @@ item.Breakdown
 }
 
 ${
+item.Emerging || item.Developing || item.Secure
+?
+`
+<p><strong>✔️ Assessment Guidance</strong></p>
+
+${
 item.Emerging
 ?
 `
-<div class="section-badge emerging-badge">
-🟢 Emerging
-</div>
-
+<div class="assessment-level">
+<p><strong>🟢 Emerging</strong></p>
 <p>${item.Emerging}</p>
+</div>
 `
 :
 ''
@@ -945,11 +952,10 @@ ${
 item.Developing
 ?
 `
-<div class="section-badge developing-badge">
-🟡 Developing
-</div>
-
+<div class="assessment-level">
+<p><strong>🟡 Developing</strong></p>
 <p>${item.Developing}</p>
+</div>
 `
 :
 ''
@@ -959,11 +965,14 @@ ${
 item.Secure
 ?
 `
-<div class="section-badge secure-badge">
-🔵 Secure
-</div>
-
+<div class="assessment-level">
+<p><strong>🔵 Secure</strong></p>
 <p>${item.Secure}</p>
+</div>
+`
+:
+''
+}
 `
 :
 ''
@@ -994,9 +1003,7 @@ ${
 item.Vocab
 ?
 `
-<div class="section-badge vocab-badge">
-🗣 Vocabulary
-</div>
+<p><strong>🗣 Vocabulary</strong></p>
 
 ${
 item.Vocab
@@ -1015,9 +1022,7 @@ ${
 item.Resources
 ?
 `
-<div class="section-badge resources-badge">
-📚 Resources
-</div>
+<p><strong>📚 Resources</strong></p>
 
 <p>${item.Resources}</p>
 `
@@ -1054,9 +1059,7 @@ ${
 item.Misconceptions
 ?
 `
-<div class="section-badge misconceptions-badge">
-⚠️ Common Misconceptions
-</div>
+<p><strong>⚠️ Common Misconceptions</strong></p>
 
 <p>${item.Misconceptions}</p>
 `
@@ -1110,43 +1113,32 @@ item['Long term EHCP Target']
 🧩 Long Term EHCP Target
 </div>
 
+<div class="target-box">
+
+${
+item['Long term EHCP Target']
+.split('|')
+.map(target => `
+
 <details>
 
 <summary>
-View EHCP Targets
+${target.trim()}
 </summary>
 
 <div class="target-box">
 
-<ul>
-${
-item['Long term EHCP Target']
-.split('|')
-.map(target =>
-`<li>${target.trim()}</li>`
-)
-.join('')
-}
-</ul>
-
 <p>
-
 <strong>Strand:</strong>
-
 ${item.Strand}
-
 </p>
 
 <p>
-
 <strong>Learning Area:</strong>
-
 ${item['Learning Area'] || ''}
-
 </p>
 
 <p>
-
 <strong>Stage Range:</strong>
 
 Stage ${Math.min(
@@ -1164,12 +1156,17 @@ x['Long term EHCP Target'] === item['Long term EHCP Target']
 )
 .map(x => Number(x.Level))
 )}
-
 </p>
 
-<div class="section-badge ehcp-badge">
-Associated Targets
 </div>
+
+</details>
+
+`)
+.join('')
+}
+
+<p><strong>🎯 Associated Targets</strong></p>
 
 ${
 filtered
@@ -1201,7 +1198,7 @@ x.Breakdown
 ?
 `
 <p>
-<strong>🎯 Target Breakdown:</strong> ${x.Breakdown}
+<strong>🪜 Smaller Steps:</strong> ${x.Breakdown}
 </p>
 `
 :

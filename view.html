@@ -495,8 +495,6 @@ await loadCurriculum();
 const strandInfo =
 await loadStrandInfo();
 
-console.log(data);
-
 const container =
 document.getElementById('curriculum');
 
@@ -1115,12 +1113,21 @@ item['Long term EHCP Target']
 <details>
 
 <summary>
-
-${item['Long term EHCP Target']}
-
+View EHCP Targets
 </summary>
 
 <div class="target-box">
+
+<ul>
+${
+item['Long term EHCP Target']
+.split('|')
+.map(target =>
+`<li>${target.trim()}</li>`
+)
+.join('')
+}
+</ul>
 
 <p>
 
@@ -1173,30 +1180,29 @@ x['Long term EHCP Target'] === item['Long term EHCP Target']
 .map(x =>
 
 `
-
 <details>
 
 <summary>
-
-Stage ${x.Level}
-
--
-
-${x.Target}
-
+Stage ${x.Level} - ${x.Target}
 </summary>
 
 <div class="target-box">
+
+<p>
+<strong>Strand:</strong> ${x.Strand || ''}
+</p>
+
+<p>
+<strong>Learning Area:</strong> ${x['Learning Area'] || ''}
+</p>
 
 ${
 x.Breakdown
 ?
 `
-<div class="section-badge breakdown-badge">
-🎯 Target Breakdown
-</div>
-
-<p>${x.Breakdown}</p>
+<p>
+<strong>🎯 Target Breakdown:</strong> ${x.Breakdown}
+</p>
 `
 :
 ''
@@ -1206,18 +1212,22 @@ ${
 x['Linked EHCP Areas']
 ?
 `
-<div class="section-badge ehcp-badge">
-🔗 Linked EHCP Areas
-</div>
+<p>
+<strong>🔗 Linked EHCP Areas:</strong>
+</p>
+
+<ul>
 
 ${
 x['Linked EHCP Areas']
 .split('|')
 .map(area =>
-`<span class="tag">${area.trim()}</span>`
+`<li>${area.trim()}</li>`
 )
 .join('')
 }
+
+</ul>
 `
 :
 ''
@@ -1227,11 +1237,9 @@ ${
 x.Emerging
 ?
 `
-<div class="section-badge emerging-badge">
-🟢 Emerging
-</div>
-
-<p>${x.Emerging}</p>
+<p>
+<strong>🟢 Emerging:</strong> ${x.Emerging}
+</p>
 `
 :
 ''
@@ -1241,11 +1249,9 @@ ${
 x.Developing
 ?
 `
-<div class="section-badge developing-badge">
-🟡 Developing
-</div>
-
-<p>${x.Developing}</p>
+<p>
+<strong>🟡 Developing:</strong> ${x.Developing}
+</p>
 `
 :
 ''
@@ -1255,11 +1261,9 @@ ${
 x.Secure
 ?
 `
-<div class="section-badge secure-badge">
-🔵 Secure
-</div>
-
-<p>${x.Secure}</p>
+<p>
+<strong>🔵 Secure:</strong> ${x.Secure}
+</p>
 `
 :
 ''
@@ -1269,17 +1273,19 @@ ${
 x.Activities
 ?
 `
-<div class="section-badge activities-badge">
-🎲 Suggested Activities
-</div>
+<p>
+<strong>🎲 Suggested Activities:</strong>
+</p>
 
 <ul>
+
 ${
 x.Activities
 .split("|")
 .map(a => `<li>${a.trim()}</li>`)
 .join("")
 }
+
 </ul>
 `
 :
@@ -1290,9 +1296,8 @@ ${
 x.Vocab
 ?
 `
-<div class="section-badge vocab-badge">
-🗣 Vocabulary
-</div>
+<p>
+<strong>🗣 Vocabulary:</strong>
 
 ${
 x.Vocab
@@ -1302,9 +1307,42 @@ x.Vocab
 )
 .join("")
 }
+</p>
 `
 :
 ''
+}
+
+${
+x.Resources
+?
+`
+<p>
+<strong>📚 Resources:</strong> ${x.Resources}
+</p>
+`
+:
+''
+}
+
+${
+x.Misconceptions
+?
+`
+<p>
+<strong>⚠️ Common Misconceptions:</strong> ${x.Misconceptions}
+</p>
+`
+:
+''
+}
+
+</div>
+
+</details>
+`
+)
+.join("")
 }
 
 </div>

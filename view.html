@@ -536,6 +536,9 @@ await loadCurriculum();
 const strandInfo =
 await loadStrandInfo();
 
+const cycleInfo =
+await loadCurriculumCycle();
+    
 const container =
 document.getElementById('curriculum');
 
@@ -559,9 +562,7 @@ ${
 focus
 ?
 `
-<div class="section-badge breakdown-badge">
-Focus Area
-</div>
+<p><strong>🎯 Focus Area</strong></p>
 
 <p>
 ${focusNames[focus] || focus}
@@ -940,6 +941,19 @@ if(item.Pathway.toLowerCase().includes('celebr')){
     pathwayClass = 'celebration';
 }
 
+const cycleMatch =
+curriculumCycle.find(c =>
+
+(c.Pathway || '').trim() === (item.Pathway || '').trim()
+&&
+(c.Subject || '').trim() === (item.Subject || '').trim()
+&&
+(c.Strand || '').trim() === (item.Strand || '').trim()
+&&
+(c['Focus area'] || '').trim() === (item['Focus area'] || '').trim()
+
+);
+    
 html += `
 
 <details id="target-${item.ID}">
@@ -1107,39 +1121,47 @@ ${
 item['Linked EHCP Areas']
 ?
 `
-<div class="section-badge ehcp-badge">
-🔗 Linked EHCP Areas
-</div>
+<p><strong>🔗 Linked EHCP Areas</strong></p>
 
+<div class="section-content">
+<ul>
 ${
 item['Linked EHCP Areas']
 .split('|')
 .map(area =>
-`<span class="tag">${area.trim()}</span>`
+`<li>${area.trim()}</li>`
 )
 .join('')
 }
+</ul>
+</div>
 `
 :
 ''
 }
 
 ${
-item.Cycle || item.Term
+cycleMatch
 ?
 `
-<div class="section-badge breakdown-badge">
-📅 Curriculum Cycle
-</div>
+<p><strong>📅 Curriculum Cycle</strong></p>
+
+<div class="section-content">
 
 <p>
-Cycle ${item.Cycle}
-Term ${item.Term}
+Cycle ${cycleMatch.Cycle}
 </p>
+
+<p>
+Term ${cycleMatch.Term}
+</p>
+
+</div>
 `
 :
 ''
 }
+
 
 ${
 item['Long term EHCP Target']
@@ -1241,9 +1263,7 @@ ${
 item['Next Steps within level']
 ?
 `
-<div class="section-badge nextsteps-badge">
-🚀 Next Steps Within Stage
-</div>
+<p><strong>🚀 Next Steps Within Stage</strong></p>
 
 <p>
 ${item['Next Steps within level']}

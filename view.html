@@ -1173,7 +1173,20 @@ item['Long term EHCP Target']
 ${
 item['Long term EHCP Target']
 .split('|')
-.map(target => `
+.map(target => {
+
+const matchingStatements = filtered.filter(x =>
+
+x['Long term EHCP Target']
+&&
+x['Long term EHCP Target']
+.split('|')
+.map(t => t.trim())
+.includes(target.trim())
+
+);
+
+return `
 
 <details>
 
@@ -1197,19 +1210,11 @@ ${item['Learning Area'] || ''}
 <strong>📈 Stage Range</strong>
 
 Stage ${Math.min(
-...filtered
-.filter(x =>
-x['Long term EHCP Target'] === item['Long term EHCP Target']
-)
-.map(x => Number(x.Level))
+...matchingStatements.map(x => Number(x.Level))
 )}
 -
 Stage ${Math.max(
-...filtered
-.filter(x =>
-x['Long term EHCP Target'] === item['Long term EHCP Target']
-)
-.map(x => Number(x.Level))
+...matchingStatements.map(x => Number(x.Level))
 )}
 </p>
 
@@ -1220,21 +1225,14 @@ x['Long term EHCP Target'] === item['Long term EHCP Target']
 <ul>
 
 ${
-filtered
-.filter(x =>
-x['Long term EHCP Target']
-&&
-x['Long term EHCP Target']
-.split('|')
-.map(t => t.trim())
-.includes(target.trim())
-)
+matchingStatements
 .sort((a,b)=>Number(a.Level)-Number(b.Level))
 .map(x => `
 <li>
 Stage ${x.Level} - ${x.Target}
 </li>
-`)
+`;
+})
 .join('')
 }
 

@@ -910,84 +910,148 @@ ${item.secondaryStrands.length ? `
 
         </summary>
 
-        <div style="margin-top:12px;">
+       <div style="margin-top:12px;">
 
-            ${row.Subject ? `
-            <p>
+${row.Subject ? `
+<p>
+<strong>📚 Subject:</strong>
+<br>
+${row.Subject}
+</p>
+` : ''}
 
-                <strong>Subject:</strong>
+${row.Pathway ? `
+<p>
+<strong>🏞 Pathway:</strong>
+<br>
+${row.Pathway}
+</p>
+` : ''}
 
-                ${row.Subject}
+${row.Strand ? `
+<p>
+<strong>🎯 Strand:</strong>
+<br>
+${row.Strand}
+</p>
+` : ''}
 
-            </p>
-            ` : ''}
+${row['Learning Area'] ? `
+<p>
+<strong>🧩 Learning Area:</strong>
+<br>
+${row['Learning Area']}
+</p>
+` : ''}
 
-            ${row.Pathway ? `
-            <p>
+${row.Breakdown ? `
+<p>
+<strong>🪜 Smaller Steps:</strong>
+<br>
+${row.Breakdown}
+</p>
+` : ''}
 
-                <strong>Pathway:</strong>
+${row.Emerging || row.Developing || row.Secure ? `
+<p>
+<strong>✔️ Assessment Guidance</strong>
+</p>
 
-                ${row.Pathway}
+${row.Emerging ? `
+<p>
+<strong>🟢 Emerging</strong>
+<br>
+${row.Emerging}
+</p>
+` : ''}
 
-            </p>
-            ` : ''}
+${row.Developing ? `
+<p>
+<strong>🟡 Developing</strong>
+<br>
+${row.Developing}
+</p>
+` : ''}
 
-            ${row.Strand ? `
-            <p>
+${row.Secure ? `
+<p>
+<strong>🔵 Secure</strong>
+<br>
+${row.Secure}
+</p>
+` : ''}
+` : ''}
 
-                <strong>Strand:</strong>
+${row.Activities ? `
+<p>
+<strong>🎲 Suggested Activities</strong>
+</p>
 
-                ${row.Strand}
+<ul>
+${row.Activities
+.split('|')
+.map(activity => `<li>${activity.trim()}</li>`)
+.join('')}
+</ul>
+` : ''}
 
-            </p>
-            ` : ''}
+${row.Vocab ? `
+<p>
+<strong>🗣 Vocabulary</strong>
+<br>
+${row.Vocab.split('|').join(', ')}
+</p>
+` : ''}
 
-            ${row['Learning Area'] ? `
-            <p>
+${row.Resources ? `
+<p>
+<strong>📚 Resources</strong>
+<br>
+${row.Resources}
+</p>
+` : ''}
 
-                <strong>Learning Area:</strong>
+${row['White Rose'] ? `
+<p>
+<a
+href="${row['White Rose']}"
+target="_blank">
+📖 White Rose Resource
+</a>
+</p>
+` : ''}
 
-                ${row['Learning Area']}
+${row.Misconceptions ? `
+<p>
+<strong>⚠️ Common Misconceptions</strong>
+<br>
+${row.Misconceptions}
+</p>
+` : ''}
 
-            </p>
-            ` : ''}
+${row['Linked EHCP Areas'] ? `
+<p>
+<strong>🔗 Linked EHCP Areas</strong>
+<br>
+${row['Linked EHCP Areas']}
+</p>
+` : ''}
 
-            ${row['Linked EHCP Areas'] ? `
-            <p>
+${row['Next Steps within level'] ? `
+<p>
+<strong>🚀 Next Steps Within Stage</strong>
+<br>
+${row['Next Steps within level']}
+</p>
+` : ''}
 
-                <strong>Linked EHCP Areas:</strong>
+<p>
+<strong>📝 Curriculum Statement</strong>
+<br>
+${row.Target || ''}
+</p>
 
-                ${row['Linked EHCP Areas']}
-
-            </p>
-            ` : ''}
-
-            ${row.Breakdown ? `
-            <p>
-
-                <strong>Target Breakdown:</strong>
-
-                <br>
-
-                ${row.Breakdown}
-
-            </p>
-            ` : ''}
-
-            ${row.Target ? `
-            <p>
-
-                <strong>Statement:</strong>
-
-                <br>
-
-                ${row.Target}
-
-            </p>
-            ` : ''}
-
-        </div>
-
+</div>
     </details>
 
     `;

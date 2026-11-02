@@ -1175,7 +1175,7 @@ item['Long term EHCP Target']
 .split('|')
 .map(target => {
 
-const matchingStatements = filtered.filter(x =>
+const matchingStatements = data.filter(x =>
 
 x['Long term EHCP Target']
 &&
@@ -1197,8 +1197,11 @@ ${target.trim()}
 <div class="target-box section-content">
 
 <p>
-<strong>📚 Strand</strong>
-${item.Strand}
+<strong>📚 Associated Strands</strong>
+
+${[...new Set(
+matchingStatements.map(x => x.Strand)
+)].join(', ')}
 </p>
 
 <p>

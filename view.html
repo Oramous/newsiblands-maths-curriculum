@@ -360,9 +360,7 @@ margin-bottom:20px;
 }
 
 .content strong{
-    display:block;
-    margin-top:18px;
-    margin-bottom:6px;
+    margin-bottom:0;
 }
 
 .assessment-level{
@@ -377,6 +375,17 @@ margin-bottom:20px;
 .target-box details{
     margin-top:12px;
 }
+
+.content ul,
+.target-box ul{
+    margin-left:22px;
+    padding-left:0;
+}
+
+.section-content{
+    margin-left:22px;
+    margin-top:4px;
+}    
     
 </style>
 
@@ -943,7 +952,9 @@ ${item.Target}
 
 <p><strong>🏞 Pathway</strong></p>
 
+<div class="section-content">
 <p>${item.Pathway}</p>
+</div>
 
 ${
 item.Breakdown
@@ -951,7 +962,9 @@ item.Breakdown
 `
 <p><strong>🪜 Smaller Steps</strong></p>
 
+<div class="section-content">
 <p>${item.Breakdown}</p>
+</div>
 `
 :
 ''
@@ -1011,7 +1024,7 @@ item.Activities
 ?
 `
 <p><strong>🎲 Suggested Activities</strong></p>
-
+<div class="section-content">
 <ul>
 ${
 item.Activities
@@ -1020,6 +1033,7 @@ item.Activities
 .join("")
 }
 </ul>
+</div>
 `
 :
 ''
@@ -1031,14 +1045,14 @@ item.Vocab
 `
 <p><strong>🗣 Vocabulary</strong></p>
 
-${
-item.Vocab
-.split("|")
-.map(word =>
-`<span class="tag">${word.trim()}</span>`
-)
-.join("")
+<div class="section-content">
+<p>${item.Vocab.split('|').join(', ')}</p>
+</div>
+`
+:
+''
 }
+</div>
 `
 :
 ''
@@ -1049,8 +1063,9 @@ item.Resources
 ?
 `
 <p><strong>📚 Resources</strong></p>
-
+<div class="section-content">
 <p>${item.Resources}</p>
+</div>
 `
 :
 ''
@@ -1060,8 +1075,19 @@ ${
 item['White Rose']
 ?
 `
-<div class="section-badge whiterose-badge">
-📖 White Rose
+<p><strong>📖 White Rose</strong></p>
+
+<div class="section-content">
+
+<a
+href="${item['White Rose']}"
+target="_blank"
+class="white-rose-btn">
+
+📖 White Rose Resource
+
+</a>
+
 </div>
 
 <p>
@@ -1086,8 +1112,9 @@ item.Misconceptions
 ?
 `
 <p><strong>⚠️ Common Misconceptions</strong></p>
-
+<div class="section-content">
 <p>${item.Misconceptions}</p>
+</div>
 `
 :
 ''
@@ -1136,8 +1163,7 @@ item['Long term EHCP Target']
 ?
 `
 <p><strong>🧩 Long Term EHCP Targets</strong></p>
-
-<div class="target-box">
+<div class="section-content">
 
 ${
 item['Long term EHCP Target']
@@ -1150,7 +1176,7 @@ item['Long term EHCP Target']
 ${target.trim()}
 </summary>
 
-<div class="target-box">
+<div class="target-box section-content">
 
 <p>
 <strong>📚 Strand</strong>
@@ -1158,12 +1184,12 @@ ${item.Strand}
 </p>
 
 <p>
-<strong>🧩Learning Area:</strong>
+<strong>🧩 Learning Area</strong>
 ${item['Learning Area'] || ''}
 </p>
 
 <p>
-<strong>📈Stage Range:</strong>
+<strong>📈 Stage Range</strong>
 
 Stage ${Math.min(
 ...filtered
@@ -1183,7 +1209,7 @@ x['Long term EHCP Target'] === item['Long term EHCP Target']
 </p>
 
 <p>
-<strong>Associated Curriculum Statements:</strong>
+<strong>🎯 Associated Curriculum Statements</strong>
 </p>
 
 <ul>
@@ -1217,181 +1243,7 @@ Stage ${x.Level} - ${x.Target}
 .join('')
 }
 
-<p><strong>🎯 Associated Targets</strong></p>
-
-${
-filtered
-.filter(x =>
-x['Long term EHCP Target'] === item['Long term EHCP Target']
-)
-.sort((a,b)=>Number(a.Level)-Number(b.Level))
-.map(x =>
-
-`
-<details>
-
-<summary>
-Stage ${x.Level} - ${x.Target}
-</summary>
-
-<div class="target-box">
-
-<p>
-<strong>📚 Strand</strong> ${x.Strand || ''}
-</p>
-
-<p>
-<strong>🧩Learning Area:</strong> ${x['Learning Area'] || ''}
-</p>
-
-${
-x.Breakdown
-?
-`
-<p>
-<strong>🪜 Smaller Steps:</strong> ${x.Breakdown}
-</p>
-`
-:
-''
-}
-
-${
-x['Linked EHCP Areas']
-?
-`
-<p>
-<strong>🔗 Linked EHCP Areas:</strong>
-</p>
-
-<ul>
-
-${
-x['Linked EHCP Areas']
-.split('|')
-.map(area =>
-`<li>${area.trim()}</li>`
-)
-.join('')
-}
-
-</ul>
-`
-:
-''
-}
-
-${
-x.Emerging
-?
-`
-<p>
-<strong>🟢 Emerging:</strong> ${x.Emerging}
-</p>
-`
-:
-''
-}
-
-${
-x.Developing
-?
-`
-<p>
-<strong>🟡 Developing:</strong> ${x.Developing}
-</p>
-`
-:
-''
-}
-
-${
-x.Secure
-?
-`
-<p>
-<strong>🔵 Secure:</strong> ${x.Secure}
-</p>
-`
-:
-''
-}
-
-${
-x.Activities
-?
-`
-<p>
-<strong>🎲 Suggested Activities:</strong>
-</p>
-
-<ul>
-
-${
-x.Activities
-.split("|")
-.map(a => `<li>${a.trim()}</li>`)
-.join("")
-}
-
-</ul>
-`
-:
-''
-}
-
-${
-x.Vocab
-?
-`
-<p>
-<strong>🗣 Vocabulary:</strong>
-
-${
-x.Vocab
-.split("|")
-.map(word =>
-`<span class="tag">${word.trim()}</span>`
-)
-.join("")
-}
-</p>
-`
-:
-''
-}
-
-${
-x.Resources
-?
-`
-<p>
-<strong>📚 Resources:</strong> ${x.Resources}
-</p>
-`
-:
-''
-}
-
-${
-x.Misconceptions
-?
-`
-<p>
-<strong>⚠️ Common Misconceptions:</strong> ${x.Misconceptions}
-</p>
-`
-:
-''
-}
-
 </div>
-
-</details>
-`
-)
-.join("")
-}
 
 </div>
 

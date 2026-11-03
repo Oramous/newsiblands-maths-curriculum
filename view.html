@@ -1091,6 +1091,33 @@ item.Resources
 }
 
 ${
+item['Natural Opportunities']
+?
+`
+<p><strong>🏫 Natural Opportunities Across the School Day</strong></p>
+
+<div class="section-content">
+
+<ul>
+
+${
+item['Natural Opportunities']
+.split('|')
+.map(x =>
+`<li>${x.trim()}</li>`
+)
+.join('')
+}
+
+</ul>
+
+</div>
+`
+:
+''
+}
+
+${
 item['White Rose']
 ?
 `

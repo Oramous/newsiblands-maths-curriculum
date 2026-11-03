@@ -609,9 +609,15 @@ box-shadow:0 2px 8px rgba(0,0,0,.1);
     `
     <h2>Why is it important?</h2>
 
-    <p>
-    ${info['Why is it important?']}
-    </p>
+    <ul>
+
+${info['Why is it important?']
+.split('|')
+.map(x => `<li>${x.trim()}</li>`)
+.join('')}
+
+</ul>
+
     `
     :
     ''

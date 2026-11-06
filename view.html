@@ -1118,24 +1118,77 @@ item['Natural Opportunities']
 }
 
 ${
-item['White Rose']
+item['WR Year']
 ?
 `
-<p><strong>📖 White Rose</strong></p>
+<p><strong>📚 National Curriculum Equivalent Stage</strong></p>
 
 <div class="section-content">
 
-<a
-href="${item['White Rose']}"
-target="_blank"
-class="white-rose-btn">
+<p>${item['WR Year']}</p>
 
-📖 White Rose Resource
+</div>
+`
+:
+''
+}
+
+${
+item['WR Block']
+?
+`
+<p><strong>📖 White Rose Resources</strong></p>
+
+<div class="section-content">
+
+${
+(() => {
+
+const blocks = (item['WR Block'] || '').split('|').map(x => x.trim());
+const steps = item['WR Step'] || '';
+const links = (item['WR Link'] || '').split('|').map(x => x.trim());
+
+let html = '';
+
+for(let i = 0; i < blocks.length; i++){
+
+html += `
+
+<p>
+
+<a
+href="${links[i] || ''}"
+target="_blank"
+style="
+color:#0077B6;
+text-decoration:underline;
+font-weight:bold;
+">
+
+${blocks[i]}
 
 </a>
 
-</div>
+</p>
 
+<p>
+
+<strong>Suggested Sections:</strong>
+
+${steps.split('|').join(', ')}
+
+</p>
+
+`;
+
+}
+
+return html;
+
+})()
+}
+
+</div>
 `
 :
 ''

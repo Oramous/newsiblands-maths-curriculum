@@ -303,6 +303,20 @@ Anything Else / Professional Discussion
 
 <div id="lessonPlannerSection" style="display:none;">
 
+<label>Maximum number of Groups</label>
+
+<select id="groupCount">
+
+<option value="2">2 Groups</option>
+
+<option value="3" selected>3 Groups</option>
+
+<option value="4">4 Groups</option>
+
+<option value="5">5 Groups</option>
+
+</select>
+    
 <label>Pupils Learning Objectives</label>
 
 <input
@@ -894,6 +908,11 @@ function buildPrompt(){
             "supportType"
         ).value;
 
+    const groupCount =
+        document.getElementById(
+            "groupCount"
+        )?.value || "3";
+    
     const matches =
         searchCurriculum(
             strengths + " " + needs + " " + currentTarget,
@@ -993,6 +1012,10 @@ SUPPORT REQUEST:
 
 ${supportType}
 
+NUMBER OF TEACHING GROUPS:
+
+${groupCount}
+
 PUPILS OBJECTIVES:
 
 ${lessonObjectives}
@@ -1029,19 +1052,27 @@ Assume these objectives belong to different learners within the same class.
 
 Create:
 
-• Whole-class starter
+• A whole-class starter
 
-• Whole-class input
+• A whole-class teaching input
 
-• Group 1 activities
+Then organise learners into the requested number of teaching groups.
 
-• Group 2 activities
+Where possible, group learners working on similar mathematical concepts together even if their curriculum targets are slightly different.
 
-• Group 3 activities
+Suggest:
+
+• Group composition
+
+• Group focus
+
+• Differentiated activity for each group
+
+• Resources needed
+
+• Adult deployment
 
 • Opportunities for communication
-
-• Adaptations for emerging, developing and verbal communicators
 
 • Assessment opportunities
 

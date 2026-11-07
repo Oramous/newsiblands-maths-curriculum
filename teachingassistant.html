@@ -271,7 +271,7 @@ border-radius:6px;
 
 <select id="supportType" onchange="toggleLessonPlanner()">
 
-<option value="recommendation">
+<option value="targets">
 Target Suggestions
 </option>
 
@@ -303,7 +303,7 @@ Anything Else / Professional Discussion
 
 <div id="lessonPlannerSection" style="display:none;">
 
-<label>Whole Class Learning Objectives</label>
+<label>Pupils Learning Objectives</label>
 
 <input
 type="text"
@@ -587,6 +587,14 @@ container.innerHTML = "";
 box.value = "";
 
 };
+  
+container.appendChild(div);
+
+});
+
+});
+
+}
 
 function removeObjective(target){
 
@@ -599,16 +607,8 @@ renderObjectives();
 
 }
     
-container.appendChild(div);
-
-});
-
-});
-
-}
-
 function renderObjectives(){
-
+  
 const container =
 document.getElementById(
 "selectedObjectives"
@@ -742,12 +742,7 @@ const needs =
 document.getElementById(
 "needs"
 ).value;
-    
-const supportType =
-document.getElementById(
-"supportType"
-).value;
-    
+
     const scope =
         document.getElementById(
             "curriculumScope"
@@ -894,6 +889,11 @@ function buildPrompt(){
             "needs"
         ).value;
 
+    const supportType =
+        document.getElementById(
+            "supportType"
+        ).value;
+
     const matches =
         searchCurriculum(
             strengths + " " + needs + " " + currentTarget,
@@ -989,7 +989,7 @@ SUPPORT REQUEST:
 
 ${supportType}
 
-WHOLE CLASS OBJECTIVES:
+PUPILS OBJECTIVES:
 
 ${lessonObjectives}
 
@@ -1065,7 +1065,7 @@ If SUPPORT REQUEST is "chat":
 
 Have a professional discussion and answer the teacher's question.
 
-If SUPPORT REQUEST is "recommendation":
+If SUPPORT REQUEST is "targets":
 
 1. Identify likely current curriculum position.
 2. Identify relevant strands.

@@ -349,6 +349,8 @@ One objective can be selected for each learner.
 
 </div>
     
+<div id="currentTargetSection">
+
 <label>Current Target (Optional)</label>
 
 <input
@@ -359,6 +361,8 @@ placeholder="Start typing a target...">
 <div id="targetSuggestions"></div>
 
 <input type="hidden" id="currentTarget">
+
+</div>
 
 <label>Current Target Status (Optional)</label>
 
@@ -535,6 +539,16 @@ type === "lesson"
 "block"
 :
 "none";
+
+document.getElementById(
+"currentTargetSection"
+).style.display =
+
+type === "lesson"
+?
+"none"
+:
+"block";
 
 }
 

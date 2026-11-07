@@ -403,33 +403,36 @@ function buildStrandFilters(){
 
     let strands = [
 
-        ...new Set(
+    ...new Set(
 
-            allData.flatMap(row => {
+        allData.flatMap(row => {
 
-                const primary =
-                    row.Strand
-                    ? row.Strand.split('|')
-                    : [];
+            const primary =
+                row.Strand
+                ? row.Strand
+                    .split('|')
+                    .map(x => x.trim())
+                : [];
 
-                const secondary =
-                    row['Secondary Strands']
-                    ? row['Secondary Strands'].split('|')
-                    : [];
+            const secondary =
+                row['Secondary Strands']
+                ? row['Secondary Strands']
+                    .split('|')
+                    .map(x => x.trim())
+                : [];
 
-                return [
-                    ...primary,
-                    ...secondary
-                ];
+            return [
+                ...primary,
+                ...secondary
+            ];
 
-            })
+        })
 
-        )
+    )
 
-    ]
-    .map(x => x.trim())
-    .filter(Boolean)
-    .sort();
+]
+.filter(Boolean)
+.sort();
 
     let html = '';
    
@@ -531,7 +534,9 @@ ehcpTargetData.forEach(row => {
                 ),
 
             subject:
-                targetInfo.Subject || '',
+                targetInfo.Subject ||
+                rows[0].Subject ||
+                '',
 
             pathway:
                 rows[0].Pathway || '',

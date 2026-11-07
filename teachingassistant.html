@@ -155,6 +155,16 @@ textarea{
     cursor:pointer;
 }
 
+.selected-objective{
+
+background:#e8f4fd;
+padding:8px;
+margin-bottom:6px;
+
+border-radius:6px;
+
+}
+    
 .target-option:hover{
     background:#f0f7fd;
 }
@@ -249,6 +259,74 @@ textarea{
     <option value="SSM">Shape, Space & Measure</option>
 </select>
 
+<label>What would you like KARL to help with?</label>
+
+<select id="supportType" onchange="toggleLessonPlanner()">
+
+<option value="recommendation">
+Target Suggestions
+</option>
+
+<option value="nextsteps">
+Next Steps in Learning
+</option>
+
+<option value="breakdown">
+Target Breakdown
+</option>
+
+<option value="assessment">
+Assessment Ideas
+</option>
+
+<option value="onetoone">
+1:1 Activity Ideas
+</option>
+
+<option value="lesson">
+Whole Class Lesson Plan
+</option>
+
+<option value="chat">
+Anything Else / Professional Discussion
+</option>
+
+</select>
+
+<div id="lessonPlannerSection" style="display:none;">
+
+<label>Whole Class Learning Objectives</label>
+
+<input
+type="text"
+id="lessonTargetSearch"
+placeholder="Search and add learning objectives...">
+
+<div id="lessonTargetSuggestions"></div>
+
+<div id="selectedObjectives"
+style="
+margin-top:10px;
+padding:10px;
+border:1px solid #ddd;
+border-radius:10px;
+background:#fafafa;
+">
+
+No objectives selected
+
+</div>
+
+<p class="help-text">
+
+Search for objectives and click them to build a class profile.
+
+One objective can be selected for each learner.
+
+</p>
+
+</div>
+    
 <label>Current Target (Optional)</label>
 
 <input
@@ -344,14 +422,17 @@ const SSM_STRANDS = [
 
 let curriculumData = [];
 
+let selectedObjectives = [];
+
 async function initialisePage() {
 
     curriculumData = await loadCurriculum();
 
-    setupTargetSearch();
+setupTargetSearch();
 
-    loadTargetFromUrl();
+setupLessonTargetSearch();
 
+loadTargetFromUrl();
 }
 
 function setupTargetSearch(){
@@ -416,6 +497,133 @@ function setupTargetSearch(){
 
 }
 
+function toggleLessonPlanner(){
+
+const type =
+document.getElementById(
+"supportType"
+).value;
+
+document.getElementById(
+"lessonPlannerSection"
+).style.display =
+
+type === "lesson"
+?
+"block"
+:
+"none";
+
+}
+
+function setupLessonTargetSearch(){
+
+const box =
+document.getElementById(
+"lessonTargetSearch"
+);
+
+const container =
+document.getElementById(
+"lessonTargetSuggestions"
+);
+
+box.addEventListener(
+"input",
+function(){
+
+const query =
+this.value.toLowerCase();
+
+container.innerHTML = "";
+
+if(query.length < 2){
+return;
+}
+
+curriculumData
+
+.filter(row =>
+
+row.Target &&
+
+row.Target
+.toLowerCase()
+.includes(query)
+
+)
+
+.slice(0,15)
+
+.forEach(row=>{
+
+const div =
+document.createElement("div");
+
+div.className =
+"target-option";
+
+div.textContent =
+`${row.Level} - ${row.Target}`;
+
+div.onclick = () => {
+
+selectedObjectives.push(
+row.Target
+);
+
+renderObjectives();
+
+container.innerHTML = "";
+
+box.value = "";
+
+};
+
+container.appendChild(div);
+
+});
+
+});
+
+}
+
+function renderObjectives(){
+
+const container =
+document.getElementById(
+"selectedObjectives"
+);
+
+if(
+selectedObjectives.length === 0
+){
+
+container.innerHTML =
+"No objectives selected";
+
+return;
+
+}
+
+container.innerHTML =
+
+selectedObjectives
+
+.map(target =>
+
+`<div class="selected-objective">
+
+${target}
+
+</div>`
+
+)
+
+.join("");
+
+}
+    
 function searchCurriculum(text,scope,target){
 
     const keywords =
@@ -498,11 +706,16 @@ function showRecommendation(){
             "strengths"
         ).value;
 
-    const needs =
-        document.getElementById(
-            "needs"
-        ).value;
-
+const needs =
+document.getElementById(
+"needs"
+).value;
+    
+const supportType =
+document.getElementById(
+"supportType"
+).value;
+    
     const scope =
         document.getElementById(
             "curriculumScope"
@@ -658,6 +871,10 @@ function buildPrompt(){
 
     let records = "";
 
+const lessonObjectives =
+
+selectedObjectives.join("\n");
+    
     matches.forEach(row=>{
 
         records += `
@@ -736,27 +953,72 @@ ${strengths}
 NEEDS / DIFFICULTIES:
 ${needs}
 
+SUPPORT REQUEST:
+
+${supportType}
+
+WHOLE CLASS OBJECTIVES:
+
+${lessonObjectives}
+
 CURRICULUM INFORMATION:
 
 ${records}
 
-Please:
+Please respond according to the support request selected.
+
+If SUPPORT REQUEST is "lesson":
+
+Create a whole class lesson plan.
+
+Include:
+
+• Engaging starter
+
+• Whole class teaching input
+
+• Differentiated group activities
+
+• Suggested resources
+
+• Assessment opportunities
+
+• Plenary
+
+• Adaptations for different communication levels
+
+Use all listed learning objectives.
+
+If SUPPORT REQUEST is "onetoone":
+
+Provide at least 10 practical 1:1 activity ideas.
+
+If SUPPORT REQUEST is "breakdown":
+
+Break curriculum targets into smaller achievable steps.
+
+If SUPPORT REQUEST is "assessment":
+
+Provide assessment approaches, evidence examples and moderation guidance.
+
+If SUPPORT REQUEST is "nextsteps":
+
+Recommend the most likely next curriculum objectives.
+
+If SUPPORT REQUEST is "chat":
+
+Have a professional discussion and answer the teacher's question.
+
+If SUPPORT REQUEST is "recommendation":
 
 1. Identify likely current curriculum position.
-2. Identify relevant strand(s).
-3. Identify linked long-term EHCP target(s).
+2. Identify relevant strands.
+3. Identify linked EHCP targets.
 4. Recommend next objectives.
-5. Explain your reasoning.
+5. Explain reasoning.
 
-After responding ask whether the teacher would also like:
-
-• Teaching activities
-• A lesson plan
-• Assessment ideas
-• Evidence collection ideas
-• Intervention activities
-• Resource suggestions
-• Parent-friendly explanations`;
+After responding ask whether further curriculum support is required.
+`;
 
     document.getElementById(
         "generatedPrompt"

@@ -150,6 +150,14 @@ textarea{
     overflow-y:auto;
 }
 
+#lessonTargetSuggestions{
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-top:4px;
+    max-height:250px;
+    overflow-y:auto;
+}
+    
 .target-option{
     padding:10px;
     cursor:pointer;
@@ -580,6 +588,17 @@ box.value = "";
 
 };
 
+function removeObjective(target){
+
+selectedObjectives =
+selectedObjectives.filter(
+x => x !== target
+);
+
+renderObjectives();
+
+}
+    
 container.appendChild(div);
 
 });
@@ -616,12 +635,25 @@ selectedObjectives
 
 ${target}
 
+<button
+style="
+float:right;
+border:none;
+background:none;
+cursor:pointer;
+font-weight:bold;
+"
+onclick="removeObjective('${target.replace(/'/g,"\\'")}')">
+
+✖
+
+</button>
+
 </div>`
 
 )
 
 .join("");
-
 }
     
 function searchCurriculum(text,scope,target){
@@ -988,6 +1020,30 @@ Include:
 • Adaptations for different communication levels
 
 Use all listed learning objectives.
+
+Assume these objectives belong to different learners within the same class.
+
+Create:
+
+• Whole-class starter
+
+• Whole-class input
+
+• Group 1 activities
+
+• Group 2 activities
+
+• Group 3 activities
+
+• Opportunities for communication
+
+• Adaptations for emerging, developing and verbal communicators
+
+• Assessment opportunities
+
+• Plenary
+
+Ensure all learners can access the same overall lesson theme while working at different curriculum levels.
 
 If SUPPORT REQUEST is "onetoone":
 

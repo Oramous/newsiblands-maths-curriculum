@@ -905,7 +905,11 @@ function buildPrompt(){
 
 const lessonObjectives =
 
-selectedObjectives.join("\n");
+selectedObjectives
+.map((obj,index)=>
+`Learner ${index+1}: ${obj}`
+)
+.join("\n");
     
     matches.forEach(row=>{
 

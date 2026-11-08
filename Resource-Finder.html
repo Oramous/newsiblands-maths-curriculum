@@ -357,7 +357,7 @@ function populateStrands(){
     });
 
 }
-
+  
 function performSearch(){
 
     const query =
@@ -436,19 +436,18 @@ return (
 
     let html = "";
 
-    html += `
-    <div class="card">
+html += `
+<details>
 
-    <h3>📚 Curriculum Matches</h3>
+<summary>
 
-    <p>
-    Found ${matches.length} matching curriculum statements.
-    </p>
+📚 Curriculum Matches (${matches.length})
 
-    </div>
-    `;
+</summary>
 
-    matches.forEach(row=>{
+`;
+
+matches.forEach(row=>{
 
         html += `
 
@@ -530,6 +529,10 @@ return (
 
     });
 
+html += `
+</details>
+`;
+    
 const whiteRoseMap = {};
 
 matches.forEach(row => {
@@ -543,10 +546,7 @@ if(!whiteRoseMap[block]){
 
 whiteRoseMap[block] = {
 
-pdf:
-row['WR Link'] || '',
-
-sections:new Set()
+    resources: []
 
 };
 
@@ -556,11 +556,14 @@ sections:new Set()
 .split('|')
 .map(x => x.trim())
 .filter(Boolean)
-.forEach(section => {
+.forEach(step => {
 
-whiteRoseMap[block]
-.sections
-.add(section);
+    whiteRoseMap[block].resources.push({
+
+        step: step,
+        link: row['WR Link'] || ''
+
+    });
 
 });
 
@@ -597,19 +600,20 @@ border-radius:10px;
 
 <br><br>
 
-${[...data.sections]
-.join(', ')}
-
-<br><br>
+${data.resources.map(resource => `
 
 <a
 class="resource-link"
-href="${data.pdf}"
+href="${resource.link}"
 target="_blank">
 
-📖 Open White Rose Scheme
+${resource.step}
 
-</a>
+</a><br>
+
+`).join('')}
+
+<br><br>
 
 </div>
 

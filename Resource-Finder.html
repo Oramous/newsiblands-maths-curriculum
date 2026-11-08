@@ -383,12 +383,16 @@ const strandFilter =
             "searchResults"
         );
 
-    if(query.length < 2){
+if(
+    query.length < 2 &&
+    !yearFilter &&
+    !strandFilter
+){
 
-        output.innerHTML = "";
+    output.innerHTML = "";
 
-        return;
-    }
+    return;
+}
 
     const matches =
 
@@ -414,8 +418,7 @@ const matchesSearch =
 
 const matchesYear =
     !yearFilter ||
-    row.Stage === yearFilter ||
-    row.Year === yearFilter;
+    (row["WR Year"] || "") === yearFilter;
 
 const matchesStrand =
     !strandFilter ||

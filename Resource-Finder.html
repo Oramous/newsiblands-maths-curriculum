@@ -210,6 +210,40 @@ class="search-box"
 placeholder="Search comparison, counting, fractions, measuring, shape..."
 oninput="performSearch()">
 
+<div style="margin-top:15px;">
+
+<button onclick="quickSearch('counting')">Counting</button>
+<button onclick="quickSearch('comparison')">Comparison</button>
+<button onclick="quickSearch('subitising')">Subitising</button>
+<button onclick="quickSearch('shape')">Shape</button>
+<button onclick="quickSearch('measure')">Measure</button>
+<button onclick="quickSearch('fractions')">Fractions</button>
+<button onclick="quickSearch('money')">Money</button>
+<button onclick="quickSearch('time')">Time</button>
+
+</div>
+
+<div style="margin-top:15px;">
+
+<select id="yearFilter" onchange="performSearch()">
+
+<option value="">All Years</option>
+<option>Nursery</option>
+<option>Reception</option>
+<option>Year 1</option>
+<option>Year 2</option>
+<option>Year 3</option>
+
+</select>
+
+</div>
+
+<select id="strandFilter" onchange="performSearch()">
+
+<option value="">All Strands</option>
+
+</select>
+    
 </div>
 
 <div class="section">
@@ -281,6 +315,47 @@ async function initialise(){
     curriculumData =
         await loadCurriculum();
 
+    populateStrands();
+
+}
+
+function quickSearch(term){
+
+    document.getElementById(
+        "searchBox"
+    ).value = term;
+
+    performSearch();
+
+}
+
+function populateStrands(){
+
+    const dropdown =
+        document.getElementById(
+            "strandFilter"
+        );
+
+    const strands =
+        [...new Set(
+            curriculumData
+                .map(r => r.Strand)
+                .filter(Boolean)
+        )]
+        .sort();
+
+    strands.forEach(strand => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = strand;
+        option.textContent = strand;
+
+        dropdown.appendChild(option);
+
+    });
+
 }
 
 function performSearch(){
@@ -293,6 +368,16 @@ function performSearch(){
         .toLowerCase()
         .trim();
 
+const yearFilter =
+    document.getElementById(
+        "yearFilter"
+    ).value;
+
+const strandFilter =
+    document.getElementById(
+        "strandFilter"
+    ).value;
+    
     const output =
         document.getElementById(
             "searchResults"
@@ -324,7 +409,23 @@ function performSearch(){
             .join(" ")
             .toLowerCase();
 
-            return text.includes(query);
+const matchesSearch =
+    text.includes(query);
+
+const matchesYear =
+    !yearFilter ||
+    row.Stage === yearFilter ||
+    row.Year === yearFilter;
+
+const matchesStrand =
+    !strandFilter ||
+    row.Strand === strandFilter;
+
+return (
+    matchesSearch &&
+    matchesYear &&
+    matchesStrand
+);
 
         })
 

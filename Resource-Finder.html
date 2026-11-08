@@ -316,9 +316,9 @@ function performSearch(){
                 row.Breakdown,
                 row.Activities,
                 row.Vocab,
-                row.["WR Block"]
-                row.["WR Step"]
-                row.["WR Link"]
+                row["WR Block"],
+                row["WR Step"],
+                row["WR Link"]
 
             ]
             .join(" ")
@@ -358,12 +358,12 @@ function performSearch(){
         </p>
 
         ${
-        row['White Rose Block']
+        row['WR Block']
         ?
         `
         <p>
         <strong>White Rose:</strong>
-        ${row['White Rose Block']}
+        ${row['WR Block']}
         </p>
         `
         :
@@ -371,12 +371,12 @@ function performSearch(){
         }
 
         ${
-        row['White Rose Sections']
+        row['WR Step']
         ?
         `
         <p>
         <strong>Suggested Sections:</strong>
-        ${row['White Rose Sections']}
+        ${row['WR Step']}
         </p>
         `
         :
@@ -384,12 +384,12 @@ function performSearch(){
         }
 
         ${
-        row['White Rose PDF']
+        row['WR Link']
         ?
         `
         <a
         class="resource-link"
-        href="${row['White Rose PDF']}"
+        href="${row['WR Link']}"
         target="_blank">
 
         📖 Open White Rose Resource
@@ -431,7 +431,7 @@ const whiteRoseMap = {};
 matches.forEach(row => {
 
 const block =
-(row['White Rose Block'] || '').trim();
+(row['WR Block'] || '').trim();
 
 if(!block) return;
 
@@ -440,7 +440,7 @@ if(!whiteRoseMap[block]){
 whiteRoseMap[block] = {
 
 pdf:
-row['White Rose PDF'] || '',
+row['WR Link'] || '',
 
 sections:new Set()
 
@@ -448,7 +448,7 @@ sections:new Set()
 
 }
 
-(row['White Rose Sections'] || '')
+(row['WR Step'] || '')
 .split('|')
 .map(x => x.trim())
 .filter(Boolean)

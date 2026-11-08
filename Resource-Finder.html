@@ -426,6 +426,131 @@ function performSearch(){
 
     });
 
+const whiteRoseMap = {};
+
+matches.forEach(row => {
+
+const block =
+(row['White Rose Block'] || '').trim();
+
+if(!block) return;
+
+if(!whiteRoseMap[block]){
+
+whiteRoseMap[block] = {
+
+pdf:
+row['White Rose PDF'] || '',
+
+sections:new Set()
+
+};
+
+}
+
+(row['White Rose Sections'] || '')
+.split('|')
+.map(x => x.trim())
+.filter(Boolean)
+.forEach(section => {
+
+whiteRoseMap[block]
+.sections
+.add(section);
+
+});
+
+});
+
+if(
+Object.keys(
+whiteRoseMap
+).length
+){
+
+html += `
+
+<div class="card">
+
+<h2>📖 White Rose Resources</h2>
+
+`;
+
+Object.entries(
+whiteRoseMap
+).forEach(([block,data]) => {
+
+html += `
+
+<div style="
+margin-top:15px;
+padding:15px;
+background:#f7f9fc;
+border-radius:10px;
+">
+
+<strong>${block}</strong>
+
+<br><br>
+
+${[...data.sections]
+.join(', ')}
+
+<br><br>
+
+<a
+class="resource-link"
+href="${data.pdf}"
+target="_blank">
+
+📖 Open White Rose Scheme
+
+</a>
+
+</div>
+
+`;
+
+});
+
+html += `</div>`;
+
+}
+
+const opportunities = new Set();
+
+matches.forEach(row => {
+
+(row['Natural Opportunities'] || '')
+.split('|')
+.map(x => x.trim())
+.filter(Boolean)
+.forEach(x => opportunities.add(x));
+
+});
+
+if(opportunities.size){
+
+html += `
+
+<div class="card">
+
+<h2>🌍 New Siblands Activities & Contexts</h2>
+
+<ul>
+
+${[...opportunities]
+.map(x=>`<li>${x}</li>`)
+.join('')}
+
+</ul>
+
+</div>
+
+`;
+
+}
+    
     html += `
 
     <div class="card">
@@ -443,17 +568,75 @@ function performSearch(){
 
     </div>
 
-    <div class="card">
+   html += `
 
-    <h3>🔴 YouTube</h3>
+<div class="card">
 
-    <a
-    class="resource-link"
-    href="https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' maths')}"
-    target="_blank">
+<h3>🔴 YouTube Resources</h3>
 
-    Search YouTube for "${query}"
+<a
+class="resource-link"
+href="https://www.youtube.com/results?search_query=${encodeURIComponent('Numberblocks ' + query)}"
+target="_blank">
 
+Numberblocks: ${query}
+
+</a>
+
+<br>
+
+<a
+class="resource-link"
+href="https://www.youtube.com/results?search_query=${encodeURIComponent('BBC Super Movers ' + query)}"
+target="_blank">
+
+BBC Super Movers: ${query}
+
+</a>
+
+<br>
+
+<a
+class="resource-link"
+href="https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' maths')}"
+
+target="_blank">
+
+General Maths Videos
+
+</a>
+
+</div>
+
+`;
+
+html += `
+
+<div class="card">
+
+<h3>🤖 Ask KARL</h3>
+
+<p>
+
+Need activities, assessment ideas,
+lesson plans or next steps?
+
+</p>
+
+<br>
+
+<a
+class="resource-link"
+href="teachingassistant.html">
+
+Open KARL Teaching Assistant
+
+</a>
+
+</div>
+
+`;
+    
     </a>
 
     </div>

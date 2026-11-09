@@ -1318,20 +1318,135 @@ Stage ${x.Level} - ${x.Target}
 }
 
 
-${
-item['Next Steps within level']
-?
-`
-<p><strong>🚀 Next Steps Within Stage</strong></p>
+<p><strong>🚀 Next Steps</strong></p>
 
-<p>
-${item['Next Steps within level']}
-</p>
-`
-:
-''
+<div class="section-content">
+
+${(() => {
+
+const currentTargets =
+(item['Long term EHCP Target'] || '')
+.split('|')
+.map(x => x.trim())
+.filter(Boolean);
+
+let sideways = filtered.filter(x => {
+
+if(x.ID === item.ID) return false;
+
+if(Number(x.Level) !== Number(item.Level))
+return false;
+
+const targets =
+(x['Long term EHCP Target'] || '')
+.split('|')
+.map(t => t.trim());
+
+return currentTargets.some(t =>
+targets.includes(t)
+);
+
+});
+
+let forwards = filtered.filter(x => {
+
+if(Number(x.Level) !== Number(item.Level) + 1)
+return false;
+
+const targets =
+(x['Long term EHCP Target'] || '')
+.split('|')
+.map(t => t.trim());
+
+return currentTargets.some(t =>
+targets.includes(t)
+);
+
+});
+
+let html = '';
+
+sideways.sort((a,b) =>
+a.Target.localeCompare(b.Target)
+);
+
+forwards.sort((a,b) =>
+a.Target.localeCompare(b.Target)
+);    
+    
+if(sideways.length){
+
+html += `
+<p><strong>➡️ Sideways</strong></p>
+<ul>
+`;
+
+sideways.forEach(target => {
+
+html += `
+<li>
+<a href="javascript:void(0)"
+onclick="
+const el =
+document.getElementById('target-${target.ID}');
+
+if(el){
+
+el.open = true;
+
+el.scrollIntoView({
+behavior:'smooth',
+block:'start'
+});
+
+}
+">
+${target.Target}
+</a>
+</li>
+`;
+
+});
+
+html += '</ul>';
+
 }
 
+if(forwards.length){
+
+html += `
+<p><strong>⬆️ Forwards</strong></p>
+<ul>
+`;
+
+forwards.forEach(target => {
+
+html += `
+<li>
+<a href="#target-${target.ID}"
+onclick="
+setTimeout(() => {
+const el =
+document.getElementById('target-${target.ID}');
+if(el) el.open = true;
+},100);
+">
+${target.Target}
+</a>
+</li>
+`;
+
+});
+
+html += '</ul>';
+
+}
+
+return html;
+
+})()}
+
+</div>
 </div>
 
 </details>
@@ -1360,11 +1475,11 @@ buildPage();
 
 window.addEventListener('load', () => {
 
+function openHashTarget(){
+
 const hash = window.location.hash;
 
-if(hash){
-
-setTimeout(() => {
+if(!hash) return;
 
 const target =
 document.querySelector(hash);
@@ -1380,9 +1495,14 @@ block:'start'
 
 }
 
-},500);
-
 }
+
+setTimeout(openHashTarget,500);
+
+window.addEventListener(
+'hashchange',
+openHashTarget
+);
 
 });
 

@@ -613,11 +613,31 @@ whiteRoseMap
 ).length
 ){
 
+const whiteRoseCount =
+Object.values(whiteRoseMap)
+.reduce(
+    (total, block) =>
+        total + block.resources.length,
+    0
+);
+
 html += `
 
 <div class="card">
 
-<h2>📖 White Rose Resources</h2>
+<details open>
+
+<summary style="
+font-size:24px;
+font-weight:bold;
+cursor:pointer;
+color:#003B5C;
+">
+
+📖 White Rose Resources
+(${whiteRoseCount})
+
+</summary>
 
 `;
 
@@ -659,7 +679,11 @@ ${resource.step}
 
 });
 
-html += `</div>`;
+html += `
+</details>
+</div>
+`;
+
 
 }
 
@@ -681,7 +705,19 @@ html += `
 
 <div class="card">
 
-<h2>🌍 New Siblands Activities & Contexts</h2>
+<details>
+
+<summary style="
+font-size:24px;
+font-weight:bold;
+cursor:pointer;
+color:#003B5C;
+">
+
+🌍 New Siblands Activities & Contexts
+(${opportunities.size})
+
+</summary>
 
 <ul>
 
@@ -690,6 +726,8 @@ ${[...opportunities]
 .join('')}
 
 </ul>
+
+</details>
 
 </div>
 

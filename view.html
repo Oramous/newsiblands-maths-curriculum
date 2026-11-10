@@ -593,28 +593,57 @@ ${
 pathway
 ?
 `
-<div class="${pathway.toLowerCase()}-banner">
-
+<div class="${
+pathway.toLowerCase().includes('belong')
+? 'foundation-banner'
+: pathway.toLowerCase().includes('celebr')
+? 'celebration-banner'
+: 'achievement-banner'
+}">
 ${
-pathway.includes('Belong')
+pathway.toLowerCase().includes('belong')
 ? '🟢 Belonging Pathway'
-: pathway.includes('Celebr')
+: pathway.toLowerCase().includes('celebr')
 ? '🟣 Celebration Pathway'
 : '🔵 Achievement Pathway'
 }
-
 </div>
 `
 :
 ''
 }
 
-    <h2>Introduction</h2>
+    ${
+info['Shared Introduction']
+?
+`
+<h2>Strand Overview</h2>
 
-    <p>
-    ${info['Introduction'] || ''}
-    </p>
+<p>
+${info['Shared Introduction']}
+</p>
+`
+:
+''
+}
 
+${
+info['Introduction']
+?
+`
+<h2>${
+pathway
+? pathway + ' Pathway'
+: 'Introduction'
+}</h2>
+
+<p>
+${info['Introduction']}
+</p>
+`
+:
+''
+}
     ${
     info['Why is it important?']
     ?

@@ -508,15 +508,28 @@ await loadCurriculumCycle();
 const container =
 document.getElementById('curriculum');
 
-if(strand){
+const info = strandInfo.find(x => {
 
-    const info = strandInfo.find(x =>
+    const strandMatch =
+        (x.Strand || '').trim().toLowerCase() ===
+        (strand || '').trim().toLowerCase();
 
-        x.Strand &&
-        x.Strand.trim().toLowerCase() ===
-        strand.trim().toLowerCase()
+    if(!strandMatch) return false;
 
-    );
+    if(pathway){
+
+        return (
+            (x.Pathway || '')
+            .trim()
+            .toLowerCase() ===
+            pathway.trim().toLowerCase()
+        );
+
+    }
+
+    return true;
+
+});
 
     if(info){
 
@@ -569,6 +582,26 @@ font-style:italic;
 ">
 🔍 Click image to enlarge
 </p>
+
+</div>
+`
+:
+''
+}
+
+${
+pathway
+?
+`
+<div class="${pathway.toLowerCase()}-banner">
+
+${
+pathway.includes('Belong')
+? '🟢 Belonging Pathway'
+: pathway.includes('Celebr')
+? '🟣 Celebration Pathway'
+: '🔵 Achievement Pathway'
+}
 
 </div>
 `
